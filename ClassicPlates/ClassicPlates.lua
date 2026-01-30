@@ -97,9 +97,7 @@ local function CreateBorder(frame, r, g, b, a)
     return border
 end
 
-local function SkinBorder(frame, hpBar)
-    if frame.healthBar:IsWidgetsOnlyMode() then return end
-
+local function SkinBorder(frame)
     frame.healthBar.barTexture:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
     frame.healthBar.bgTexture:SetAlpha(0)
     frame.healthBar.selectedBorder:SetAlpha(0)
@@ -189,7 +187,7 @@ local function HandleNamePlateAdded(unit)
     end
 
     if frame.HealthBarsContainer then
-        SkinBorder(frame.HealthBarsContainer, true)
+        SkinBorder(frame.HealthBarsContainer)
     end
 
     hooksecurefunc(frame, "UpdateAnchors", function()
