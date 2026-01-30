@@ -3,5 +3,5 @@
 ## Title: Classic Plates
 ## Notes: Restores the classic nameplates
 ## Author: luckfore
-## Version: 1.00
+## Version: 1.01
 ClassicPlates.lua
