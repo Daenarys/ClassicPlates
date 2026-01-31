@@ -23,60 +23,11 @@ end)
 local function SkinCastbar(self)
     if self:IsForbidden() then return end
 
-    if self.Background then
-        self.Background:SetColorTexture(0.2, 0.2, 0.2, 0.85)
-    end
-
     if self.Text then
         self.Text:ClearAllPoints()
         self.Text:SetPoint("TOPLEFT")
         self.Text:SetPoint("BOTTOMRIGHT")
     end
-
-    hooksecurefunc(self, 'UpdateShownState', function()
-        self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
-        self.Spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
-        self.Spark:SetSize(16, 16)
-        self.Spark:SetBlendMode("ADD")
-        if self.channeling then
-            self.Spark:Hide()
-        end
-    end)
-
-    hooksecurefunc(self, 'PlayInterruptAnims', function()
-        self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
-        self.Spark:Hide()
-    end)
-
-    hooksecurefunc(self, 'PlayFinishAnim', function()
-        self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
-        self.Flash:SetTexture("Interface\\TargetingFrame\\UI-StatusBar")
-        self.Flash:SetVertexColor(self:GetStatusBarColor())
-        self.Flash:ClearAllPoints()
-        self.Flash:SetAllPoints()
-        if not self.NewFlash then
-            self.NewFlash = self.Flash:CreateAnimationGroup()
-            self.NewFlash:SetToFinalAlpha(true)
-            local FlashAnim = self.NewFlash:CreateAnimation("Alpha") 
-            FlashAnim:SetDuration(0.2)
-            FlashAnim:SetFromAlpha(1)
-            FlashAnim:SetToAlpha(0)
-        end
-        self.NewFlash:Play()
-    end)
-
-    hooksecurefunc(self, 'GetTypeInfo', function(barType)
-        if ( self.barType == "interrupted") then
-            self:SetValue(100)
-            self:SetStatusBarColor(1, 0, 0)
-        elseif (self.barType == "channel") then
-            self:SetStatusBarColor(0, 1, 0)
-        elseif (self.barType == "uninterruptable") then
-            self:SetStatusBarColor(0.7, 0.7, 0.7)
-        else
-            self:SetStatusBarColor(1, 0.7, 0)
-        end
-    end)
 
     hooksecurefunc(self, 'SetIsHighlightedCastTarget', function()
         if self.CastTargetIndicator then
@@ -196,16 +147,14 @@ local function HandleNamePlateAdded(unit)
     local nameplate, frame = GetSafeNameplate(unit)
     if not frame then return end
 
-    if frame.castBar then
-        if not frame.castBar.skinned then
-            SkinCastbar(frame.castBar)
-            frame.castBar.skinned = true
-        end
+    if not frame.castBar.skinned then
+        SkinCastbar(frame.castBar)
+        frame.castBar.skinned = true
     end
 
-    if not frame.bordersCreated then
+    if not frame.HealthBarsContainer.skinned then
         SkinBorder(frame.HealthBarsContainer)
-        frame.bordersCreated = true
+        frame.HealthBarsContainer.skinned = true
     end
 
     if UnitNameplateShowsWidgetsOnly(frame.unit) then
@@ -223,7 +172,8 @@ local function HandleNamePlateAdded(unit)
         frame.castBar.Icon:SetSize(14, 14)
         frame.castBar.Icon:ClearAllPoints()
         frame.castBar.Icon:SetPoint("CENTER", frame.castBar, "LEFT")
-        frame.castBar.Text:SetTextHeight(11)
+        frame.castBar.Text:SetFontObject("SystemFont_Shadow_Outline_Small")
+        frame.castBar.Text:SetTextHeight(12)
         frame.HealthBarsContainer:SetHeight(6)
         frame.name:SetIgnoreParentScale(true)
         frame.name:SetShadowOffset(1, -1)
