@@ -240,7 +240,9 @@ f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 f:SetScript("OnEvent", function(self, event, unit)
     if event == "PLAYER_LOGIN" then
-        C_CVar.SetCVar("nameplateStyle", Enum.NamePlateStyle.Legacy)
+        if C_CVar.GetCVar("nameplateStyle") ~= "5" then
+            C_CVar.SetCVar("nameplateStyle", Enum.NamePlateStyle.Legacy)
+        end
     elseif event == "NAME_PLATE_UNIT_ADDED" then
         HandleNamePlateAdded(unit)
     end
