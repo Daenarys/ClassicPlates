@@ -162,6 +162,16 @@ local function SkinBorder(frame)
     end)
 end
 
+local function ShowBorders(frame)
+    if not frame.Textures then return end
+    for _, tex in ipairs(frame.Textures) do
+        tex:Show()
+    end
+    if frame.background then
+        frame.background:Show()
+    end
+end
+
 local function HideBorders(frame)
     if not frame.Textures then return end
     for _, tex in ipairs(frame.Textures) do
@@ -182,16 +192,6 @@ local function GetSafeNameplate(unit)
     return nameplate, frame
 end
 
-local function HandleNamePlateRemoved(unit)
-    local nameplate, frame = GetSafeNameplate(unit)
-    if not frame then return end
-
-    if frame.bordersCreated then
-        HideBorders(frame.HealthBarsContainer)
-        frame.bordersCreated = nil
-    end
-end
-
 local function HandleNamePlateAdded(unit)
     local nameplate, frame = GetSafeNameplate(unit)
     if not frame then return end
@@ -208,8 +208,10 @@ local function HandleNamePlateAdded(unit)
         frame.bordersCreated = true
     end
 
-    if frame.widgetsOnlyMode then
+    if UnitNameplateShowsWidgetsOnly(frame.unit) then
         HideBorders(frame.HealthBarsContainer)
+    else
+        ShowBorders(frame.HealthBarsContainer)
     end
 
     hooksecurefunc(frame, "UpdateAnchors", function()
@@ -229,25 +231,17 @@ local function HandleNamePlateAdded(unit)
         frame.name:ClearAllPoints()
         frame.name:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP", 0, 4)
         frame.name:SetJustifyH("CENTER")
-        PixelUtil.SetPoint(frame.AurasFrame.DebuffListFrame, "BOTTOM", frame.name, "TOP", 0, 10)
+        frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 10)
     end)
 end
 
-local frameAdded = CreateFrame("Frame")
-frameAdded:RegisterEvent("PLAYER_LOGIN")
-frameAdded:RegisterEvent("NAME_PLATE_UNIT_ADDED")
-frameAdded:SetScript("OnEvent", function(self, event, unit)
+local f = CreateFrame("Frame")
+f:RegisterEvent("PLAYER_LOGIN")
+f:RegisterEvent("NAME_PLATE_UNIT_ADDED")
+f:SetScript("OnEvent", function(self, event, unit)
     if event == "PLAYER_LOGIN" then
         C_CVar.SetCVar("nameplateStyle", Enum.NamePlateStyle.Legacy)
     elseif event == "NAME_PLATE_UNIT_ADDED" then
         HandleNamePlateAdded(unit)
-    end
-end)
-
-local frameRemoved = CreateFrame("Frame")
-frameRemoved:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
-frameRemoved:SetScript("OnEvent", function(self, event, unit)
-    if event == "NAME_PLATE_UNIT_REMOVED" then
-        HandleNamePlateRemoved(unit)
     end
 end)
