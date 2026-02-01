@@ -4,4 +4,4 @@
 ## Notes: Restores the classic nameplates
 ## Author: luckfore
 ## Version: 1.02
-ClassicPlates.lua
+ClassicPlates.xml

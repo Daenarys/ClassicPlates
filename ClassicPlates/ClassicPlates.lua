@@ -8,8 +8,6 @@ hooksecurefunc(NamePlateClassificationFrameMixin, "UpdateClassificationIndicator
 end)
 
 hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
-    if self:IsForbidden() then return end
-
     for auraItemFrame in self.auraItemFramePool:EnumerateActive() do
         if auraItemFrame.Cooldown then
             local r1 = auraItemFrame.Cooldown:GetRegions()
@@ -21,8 +19,6 @@ hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
 end)
 
 local function SkinCastbar(self)
-    if self:IsForbidden() then return end
-
     if self.Text then
         self.Text:ClearAllPoints()
         self.Text:SetPoint("TOPLEFT")
@@ -36,19 +32,7 @@ local function SkinCastbar(self)
     end)
 end
 
-local function CreateBorder(frame, r, g, b, a)
-    local border
-    if frame.CreateTexture then
-        border = frame:CreateTexture(nil, "OVERLAY", nil, -1)
-    else
-        border = frame:GetParent():CreateTexture(nil, "OVERLAY", nil, -1)
-    end
-    border:SetColorTexture(r, g, b, a)
-    border:SetIgnoreParentScale(true)
-    return border
-end
-
-local function SkinBorder(frame)
+local function SkinHealthBar(frame)
     frame.healthBar.barTexture:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
     frame.healthBar.bgTexture:SetAlpha(0)
     frame.healthBar.selectedBorder:SetAlpha(0)
@@ -60,73 +44,51 @@ local function SkinBorder(frame)
         frame.background:SetColorTexture(0.2, 0.2, 0.2, 0.85)
     end
 
-    -- Create borders
-    local borderTop = CreateBorder(frame, 0, 0, 0, 1)
-    local borderBottom = CreateBorder(frame, 0, 0, 0, 1)
-    local borderLeft = CreateBorder(frame, 0, 0, 0, 1)
-    local borderRight = CreateBorder(frame, 0, 0, 0, 1)
+    if not frame.cpBorder then
+        frame.cpBorder = CreateFrame("Frame", nil, frame, "CpBorderTemplate")
 
-    -- Store borders in a table
-    frame["Textures"] = {borderTop, borderBottom, borderLeft, borderRight}
+        PixelUtil.SetWidth(frame.cpBorder.Left, 1, 2)
+        PixelUtil.SetPoint(frame.cpBorder.Left, "TOPRIGHT", frame.cpBorder, "TOPLEFT", 0, 1, 0, 2)
+        PixelUtil.SetPoint(frame.cpBorder.Left, "BOTTOMRIGHT", frame.cpBorder, "BOTTOMLEFT", 0, -1, 0, 2)
 
-    -- Initial border thickness
-    local borderThickness = 1.1
-    local minPixels = 1
+        PixelUtil.SetWidth(frame.cpBorder.Right, 1, 2)
+        PixelUtil.SetPoint(frame.cpBorder.Right, "TOPLEFT", frame.cpBorder, "TOPRIGHT", 0, 1, 0, 2)
+        PixelUtil.SetPoint(frame.cpBorder.Right, "BOTTOMLEFT", frame.cpBorder, "BOTTOMRIGHT", 0, -1, 0, 2)
 
-    -- Define the SizeBorders function to use PixelUtil
-    local function SizeBorders(borderThickness)
-        PixelUtil.SetHeight(borderTop, borderThickness, minPixels)
-        PixelUtil.SetHeight(borderBottom, borderThickness, minPixels)
-        PixelUtil.SetWidth(borderLeft, borderThickness, minPixels)
-        PixelUtil.SetWidth(borderRight, borderThickness, minPixels)
+        PixelUtil.SetHeight(frame.cpBorder.Bottom, 1, 2)
+        PixelUtil.SetPoint(frame.cpBorder.Bottom, "TOPLEFT", frame.cpBorder, "BOTTOMLEFT", 0, 0)
+        PixelUtil.SetPoint(frame.cpBorder.Bottom, "TOPRIGHT", frame.cpBorder, "BOTTOMRIGHT", 0, 0)
 
-        -- Adjust border positions to grow outward
-        borderTop:ClearAllPoints()
-        PixelUtil.SetPoint(borderTop, "BOTTOMLEFT", frame, "TOPLEFT", 0, 0)
-        PixelUtil.SetPoint(borderTop, "BOTTOMRIGHT", frame, "TOPRIGHT", 0, 0)
-
-        borderBottom:ClearAllPoints()
-        PixelUtil.SetPoint(borderBottom, "TOPLEFT", frame, "BOTTOMLEFT", 0, 0)
-        PixelUtil.SetPoint(borderBottom, "TOPRIGHT", frame, "BOTTOMRIGHT", 0, 0)
-
-        borderLeft:ClearAllPoints()
-        PixelUtil.SetPoint(borderLeft, "TOPLEFT", frame, "TOPLEFT", -borderThickness, borderThickness)
-        PixelUtil.SetPoint(borderLeft, "BOTTOMLEFT", frame, "BOTTOMLEFT", -borderThickness, -borderThickness)
-
-        borderRight:ClearAllPoints()
-        PixelUtil.SetPoint(borderRight, "TOPRIGHT", frame, "TOPRIGHT", borderThickness, borderThickness)
-        PixelUtil.SetPoint(borderRight, "BOTTOMRIGHT", frame, "BOTTOMRIGHT", borderThickness, -borderThickness)
+        PixelUtil.SetHeight(frame.cpBorder.Top, 1, 2)
+        PixelUtil.SetPoint(frame.cpBorder.Top, "BOTTOMLEFT", frame.cpBorder, "TOPLEFT", 0, 0)
+        PixelUtil.SetPoint(frame.cpBorder.Top, "BOTTOMRIGHT", frame.cpBorder, "TOPRIGHT", 0, 0)
     end
-
-    SizeBorders(borderThickness)
 
     hooksecurefunc(frame.healthBar, "UpdateSelectionBorder", function()
         local isTarget = frame.healthBar:IsTarget()
 
-        for _, border in ipairs(frame.Textures) do
+        for i, texture in ipairs(frame.cpBorder.Textures) do
             if isTarget then
-                border:SetColorTexture(1, 1, 1)
+                texture:SetColorTexture(1, 1, 1)
             else
-                border:SetColorTexture(0, 0, 0)
+                texture:SetColorTexture(0, 0, 0)
             end
         end
     end)
 end
 
-local function ShowBorders(frame)
-    if not frame.Textures then return end
-    for _, tex in ipairs(frame.Textures) do
-        tex:Show()
+local function ShowBorder(frame)
+    if frame.cpBorder then
+        frame.cpBorder:Show()
     end
     if frame.background then
         frame.background:Show()
     end
 end
 
-local function HideBorders(frame)
-    if not frame.Textures then return end
-    for _, tex in ipairs(frame.Textures) do
-        tex:Hide()
+local function HideBorder(frame)
+    if frame.cpBorder then
+        frame.cpBorder:Hide()
     end
     if frame.background then
         frame.background:Hide()
@@ -135,11 +97,9 @@ end
 
 local function GetSafeNameplate(unit)
     local nameplate = C_NamePlate.GetNamePlateForUnit(unit)
-    -- If there's no nameplate or the nameplate doesn't have a UnitFrame, return nils.
     if not nameplate or not nameplate.UnitFrame then return nil, nil end
 
     local frame = nameplate.UnitFrame
-    -- If none of the above conditions are met, return both the nameplate and the frame.
     return nameplate, frame
 end
 
@@ -153,14 +113,14 @@ local function HandleNamePlateAdded(unit)
     end
 
     if not frame.HealthBarsContainer.skinned then
-        SkinBorder(frame.HealthBarsContainer)
+        SkinHealthBar(frame.HealthBarsContainer)
         frame.HealthBarsContainer.skinned = true
     end
 
     if UnitNameplateShowsWidgetsOnly(frame.unit) then
-        HideBorders(frame.HealthBarsContainer)
+        HideBorder(frame.HealthBarsContainer)
     else
-        ShowBorders(frame.HealthBarsContainer)
+        ShowBorder(frame.HealthBarsContainer)
     end
 
     hooksecurefunc(frame, "UpdateAnchors", function()
@@ -172,9 +132,8 @@ local function HandleNamePlateAdded(unit)
         frame.castBar.Icon:SetSize(14, 14)
         frame.castBar.Icon:ClearAllPoints()
         frame.castBar.Icon:SetPoint("CENTER", frame.castBar, "LEFT")
-        frame.castBar.Text:SetFontObject("SystemFont_Shadow_Outline_Small")
         frame.castBar.Text:SetTextHeight(12)
-        frame.HealthBarsContainer:SetHeight(6)
+        frame.HealthBarsContainer:SetHeight(5.5)
         frame.name:SetIgnoreParentScale(true)
         frame.name:SetTextHeight(10)
         frame.name:SetShadowOffset(1, -1)
