@@ -69,20 +69,20 @@ local function SkinHealthBar(frame)
 end
 
 local function ShowBorder(frame)
-    if frame.cpBorder then
-        frame.cpBorder:Show()
-    end
     if frame.background then
         frame.background:Show()
+    end
+    if frame.cpBorder then
+        frame.cpBorder:Show()
     end
 end
 
 local function HideBorder(frame)
-    if frame.cpBorder then
-        frame.cpBorder:Hide()
-    end
     if frame.background then
         frame.background:Hide()
+    end
+    if frame.cpBorder then
+        frame.cpBorder:Hide()
     end
 end
 
