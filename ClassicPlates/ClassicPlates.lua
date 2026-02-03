@@ -1,12 +1,21 @@
-hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
-    for auraItemFrame in self.auraItemFramePool:EnumerateActive() do
-        if auraItemFrame.Cooldown then
-            local r1 = auraItemFrame.Cooldown:GetRegions()
-            if r1 and r1.GetObjectType and r1:GetObjectType() == "FontString" then
-                r1:SetAlpha(0)
-            end
+if ClassicPlates == nil then ClassicPlates = {} end
+
+ClassicPlates.initializedAddon = false
+ClassicPlates.ConfigVars = ClassicPlates_Config.Config
+
+local initFrame = CreateFrame("Frame")
+initFrame:RegisterEvent("PLAYER_LOGIN")
+initFrame:SetScript("OnEvent", function()
+    ClassicPlatesDB = ClassicPlatesDB or {}
+    for k, v in pairs(ClassicPlates_Config.DefaultConfig) do
+        if ClassicPlatesDB[k] == nil then
+            ClassicPlatesDB[k] = v
         end
     end
+
+    ClassicPlates.ConfigVars.largerPlates = ClassicPlatesDB.largerPlates
+
+    ClassicPlates.initializedAddon = true
 end)
 
 local function SkinCastbar(self)
@@ -94,46 +103,66 @@ local function GetSafeNameplate(unit)
     return nameplate, frame
 end
 
-local function HandleNamePlateAdded(unit)
-    local nameplate, frame = GetSafeNameplate(unit)
-    if not frame then return end
+function ClassicPlates.UpdatePlates(unit)
+    if ClassicPlates.initializedAddon then
+        local nameplate, frame = GetSafeNameplate(unit)
+        if not frame then return end
 
-    if not frame.castBar.skinned then
-        SkinCastbar(frame.castBar)
-        frame.castBar.skinned = true
+        if not frame.castBar.skinned then
+            SkinCastbar(frame.castBar)
+            frame.castBar.skinned = true
+        end
+
+        if not frame.HealthBarsContainer.skinned then
+            SkinHealthBar(frame.HealthBarsContainer)
+            frame.HealthBarsContainer.skinned = true
+        end
+
+        if UnitNameplateShowsWidgetsOnly(frame.unit) then
+            HideBorder(frame.HealthBarsContainer)
+        else
+            ShowBorder(frame.HealthBarsContainer)
+        end
+
+        hooksecurefunc(frame, "UpdateAnchors", function()
+            frame.castBar:SetHeight(12)
+            frame.castBar:ClearAllPoints()
+            if ClassicPlates.ConfigVars.largerPlates then
+                frame.castBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT")
+                frame.castBar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT")
+                frame.HealthBarsContainer:SetHeight(14)
+                frame.name:SetTextHeight(14)
+            else
+                frame.castBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 26, 0)
+                frame.castBar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -26, 0)
+                frame.HealthBarsContainer:SetHeight(5.5)
+                frame.name:SetTextHeight(10)
+            end
+            frame.castBar.BorderShield:SetSize(10, 12)
+            frame.castBar.Icon:SetSize(14, 14)
+            frame.castBar.Icon:ClearAllPoints()
+            frame.castBar.Icon:SetPoint("CENTER", frame.castBar, "LEFT")
+            frame.castBar.Text:SetTextHeight(12)
+            frame.name:SetIgnoreParentScale(true)
+            frame.name:SetShadowOffset(1, -1)
+            frame.name:SetShadowColor(0, 0, 0, 1)
+            frame.name:ClearAllPoints()
+            frame.name:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP", 0, 4)
+            frame.name:SetJustifyH("CENTER")
+            frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 10)
+        end)
+
+        hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
+            for auraItemFrame in self.auraItemFramePool:EnumerateActive() do
+                if auraItemFrame.Cooldown then
+                    local r1 = auraItemFrame.Cooldown:GetRegions()
+                    if r1 and r1.GetObjectType and r1:GetObjectType() == "FontString" then
+                        r1:SetAlpha(0)
+                    end
+                end
+            end
+        end)
     end
-
-    if not frame.HealthBarsContainer.skinned then
-        SkinHealthBar(frame.HealthBarsContainer)
-        frame.HealthBarsContainer.skinned = true
-    end
-
-    if UnitNameplateShowsWidgetsOnly(frame.unit) then
-        HideBorder(frame.HealthBarsContainer)
-    else
-        ShowBorder(frame.HealthBarsContainer)
-    end
-
-    hooksecurefunc(frame, "UpdateAnchors", function()
-        frame.castBar:SetHeight(12)
-        frame.castBar:ClearAllPoints()
-        frame.castBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 26, 0)
-        frame.castBar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -26, 0)
-        frame.castBar.BorderShield:SetSize(10, 12)
-        frame.castBar.Icon:SetSize(14, 14)
-        frame.castBar.Icon:ClearAllPoints()
-        frame.castBar.Icon:SetPoint("CENTER", frame.castBar, "LEFT")
-        frame.castBar.Text:SetTextHeight(12)
-        frame.HealthBarsContainer:SetHeight(5.5)
-        frame.name:SetIgnoreParentScale(true)
-        frame.name:SetTextHeight(10)
-        frame.name:SetShadowOffset(1, -1)
-        frame.name:SetShadowColor(0, 0, 0, 1)
-        frame.name:ClearAllPoints()
-        frame.name:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP", 0, 4)
-        frame.name:SetJustifyH("CENTER")
-        frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 10)
-    end)
 end
 
 local f = CreateFrame("Frame")
@@ -145,6 +174,6 @@ f:SetScript("OnEvent", function(self, event, unit)
             C_CVar.SetCVar("nameplateStyle", Enum.NamePlateStyle.Legacy)
         end
     elseif event == "NAME_PLATE_UNIT_ADDED" then
-        HandleNamePlateAdded(unit)
+        ClassicPlates.UpdatePlates(unit)
     end
 end)
