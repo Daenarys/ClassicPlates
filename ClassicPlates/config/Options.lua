@@ -13,7 +13,7 @@ panel.categoryID = category:GetID()
 local checkbox = CreateFrame("CheckButton", nil, panel, "InterfaceOptionsCheckButtonTemplate")
 checkbox:SetPoint("TOPLEFT", 16, -16)
 checkbox.Text:SetFontObject('GameFontNormal')
-checkbox.Text:SetText("Larger Plates (requires a /reload)")
+checkbox.Text:SetText("Larger Plates |cffff0000(requires a /reload)")
 
 checkbox:SetScript('OnShow', function(self)
     self:SetChecked(ClassicPlatesDB.largerPlates)
