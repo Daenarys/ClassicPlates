@@ -1,7 +1,7 @@
 ## Interface: 120000
 ## IconTexture: 1109508
 ## Title: Classic Plates
-## Notes: Restores the classic nameplates
+## Notes: Restores the pre 12.x nameplates
 ## Author: luckfore
 ## Version: 1.05
 ## SavedVariables: ClassicPlatesDB
