@@ -30,6 +30,16 @@ local function SkinCastbar(self)
             self.CastTargetIndicator:Hide()
         end
     end)
+
+    hooksecurefunc(self, 'SetIsHighlightedImportantCast', function()
+        if self.ImportantCastIndicator then
+            self.ImportantCastIndicator:Hide()
+        end
+
+        if self.ImportantCastFlashAnim then
+            self.ImportantCastFlashAnim:SetPlaying(false)
+        end
+    end)
 end
 
 local function SkinHealthBar(frame)
