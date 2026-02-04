@@ -1,0 +1,10 @@
+## Interface: 120000
+## IconTexture: 1109508
+## Title: Classic Plates
+## Notes: Restores the classic nameplates
+## Author: luckfore
+## Version: 1.05
+## SavedVariables: ClassicPlatesDB
+config/defaults.lua
+config/options.lua
+ClassicPlates.xml
