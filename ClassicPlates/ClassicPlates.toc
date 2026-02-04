@@ -5,6 +5,6 @@
 ## Author: luckfore
 ## Version: 1.04
 ## SavedVariables: ClassicPlatesDB
-config/Config.lua
-config/Options.lua
+config/defaults.lua
+config/options.lua
 ClassicPlates.xml

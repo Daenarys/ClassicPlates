@@ -1,13 +1,13 @@
 if ClassicPlates == nil then ClassicPlates = {} end
 
 ClassicPlates.initializedAddon = false
-ClassicPlates.ConfigVars = ClassicPlates_Config.Config
+ClassicPlates.ConfigVars = ClassicPlates_Defaults.Config
 
 local initFrame = CreateFrame("Frame")
 initFrame:RegisterEvent("PLAYER_LOGIN")
 initFrame:SetScript("OnEvent", function()
     ClassicPlatesDB = ClassicPlatesDB or {}
-    for k, v in pairs(ClassicPlates_Config.DefaultConfig) do
+    for k, v in pairs(ClassicPlates_Defaults.DefaultConfig) do
         if ClassicPlatesDB[k] == nil then
             ClassicPlatesDB[k] = v
         end

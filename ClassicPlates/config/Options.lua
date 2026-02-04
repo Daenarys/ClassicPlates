@@ -10,16 +10,17 @@ local category = Settings.RegisterCanvasLayoutCategory(panel, panel.name, panel.
 Settings.RegisterAddOnCategory(category)
 panel.categoryID = category:GetID()
 
-local checkbox = CreateFrame("CheckButton", nil, panel, "InterfaceOptionsCheckButtonTemplate")
-checkbox:SetPoint("TOPLEFT", 16, -16)
-checkbox.Text:SetFontObject('GameFontNormal')
-checkbox.Text:SetText("Larger Plates |cffff0000(requires a /reload)")
+-- larger plates
+local lpcheckbox = CreateFrame("CheckButton", nil, panel, "InterfaceOptionsCheckButtonTemplate")
+lpcheckbox:SetPoint("TOPLEFT", 16, -16)
+lpcheckbox.Text:SetFontObject('GameFontNormal')
+lpcheckbox.Text:SetText("Larger Plates |cffff0000(requires a /reload)")
 
-checkbox:SetScript('OnShow', function(self)
+lpcheckbox:SetScript('OnShow', function(self)
     self:SetChecked(ClassicPlatesDB.largerPlates)
 end)
 
-checkbox:SetScript('OnClick', function(self)
+lpcheckbox:SetScript('OnClick', function(self)
     local enabled = self:GetChecked()
     ClassicPlatesDB.largerPlates = enabled
 end)
