@@ -21,10 +21,7 @@ end)
 hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
     for auraItemFrame in self.auraItemFramePool:EnumerateActive() do
         if auraItemFrame.Cooldown then
-            local r1 = auraItemFrame.Cooldown:GetRegions()
-            if r1 and r1.GetObjectType and r1:GetObjectType() == "FontString" then
-                r1:SetAlpha(0)
-            end
+            auraItemFrame.Cooldown:SetHideCountdownNumbers(true)
         end
     end
 end)
