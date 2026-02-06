@@ -4,7 +4,7 @@ if ClassicPlates_OptionsPanel == nil then ClassicPlates_OptionsPanel = {} end
 -- Options Panel
 ------------------------------------
 local panel = CreateFrame("Frame")
-panel.name = "|A:gmchat-icon-blizz:16:16|aClassic|cff00c0ffPlates|r"
+panel.name = "|A:gmchat-icon-blizz:16:16|aClassic |cff00c0ffPlates|r"
 
 local category = Settings.RegisterCanvasLayoutCategory(panel, panel.name, panel.name)
 Settings.RegisterAddOnCategory(category)
@@ -33,7 +33,7 @@ SLASH_CLASSICPLATES2 = "/classicplates"
 
 SlashCmdList["CLASSICPLATES"] = function()
     if InCombatLockdown() then
-        print("|A:gmchat-icon-blizz:16:16|aClassic|cff00c0ffPlates|r:", _G.ERR_NOT_IN_COMBAT)
+        print("|A:gmchat-icon-blizz:16:16|aClassic |cff00c0ffPlates|r:", _G.ERR_NOT_IN_COMBAT)
         return
     end
 
