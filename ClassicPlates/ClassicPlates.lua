@@ -1,8 +1,14 @@
 if ClassicPlates == nil then ClassicPlates = {} end
 
-ClassicPlates.initializedAddon = false
-ClassicPlates.ConfigVars = ClassicPlates_Defaults.Config
+local CURRENT_VERSION = C_AddOns.GetAddOnMetadata("ClassicPlates", 'Version')
 
+local function UpdateVersion()
+    ClassicPlatesVersion = CURRENT_VERSION
+
+    print("|A:gmchat-icon-blizz:16:16|aClassic |cff00c0ffPlates|r: Updated to v" .. ClassicPlatesVersion)
+end
+
+ClassicPlates.initializedAddon = false
 local initFrame = CreateFrame("Frame")
 initFrame:RegisterEvent("PLAYER_LOGIN")
 initFrame:SetScript("OnEvent", function()
@@ -13,7 +19,15 @@ initFrame:SetScript("OnEvent", function()
         end
     end
 
-    ClassicPlates.ConfigVars.largerPlates = ClassicPlatesDB.largerPlates
+    --version update
+    if ClassicPlatesVersion then
+        if ClassicPlatesVersion ~= CURRENT_VERSION then
+            UpdateVersion()
+        end
+    --new user
+    else
+        ClassicPlatesVersion = CURRENT_VERSION
+    end
 
     ClassicPlates.initializedAddon = true
 end)
@@ -144,7 +158,7 @@ local function HandleNamePlateAdded(unit)
     hooksecurefunc(frame, "UpdateAnchors", function()
         frame.castBar:SetHeight(12)
         frame.castBar:ClearAllPoints()
-        if ClassicPlates.ConfigVars.largerPlates then
+        if ClassicPlatesDB.largerPlates then
             frame.castBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT")
             frame.castBar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT")
             frame.castBar.Text:SetTextHeight(14)
