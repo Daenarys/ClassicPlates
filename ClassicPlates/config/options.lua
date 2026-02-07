@@ -14,7 +14,7 @@ panel.categoryID = category:GetID()
 local lpcheckbox = CreateFrame("CheckButton", nil, panel, "InterfaceOptionsCheckButtonTemplate")
 lpcheckbox:SetPoint("TOPLEFT", 16, -16)
 lpcheckbox.Text:SetFontObject('GameFontNormal')
-lpcheckbox.Text:SetText("Larger Plates |cffff0000(requires a /reload)")
+lpcheckbox.Text:SetText("Larger Plates")
 
 lpcheckbox:SetScript('OnShow', function(self)
     self:SetChecked(ClassicPlatesDB.largerPlates)
