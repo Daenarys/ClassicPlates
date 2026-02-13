@@ -167,7 +167,11 @@ local function HandleNamePlateAdded(unit)
         else
             frame.castBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 26, 0)
             frame.castBar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -26, 0)
-            frame.castBar.Text:SetTextHeight(12)
+            if ClassicPlatesDB.smallerCastBarText then
+                frame.castBar.Text:SetTextHeight(10)
+            else
+                frame.castBar.Text:SetTextHeight(12)
+            end
             frame.HealthBarsContainer:SetHeight(5.5)
             frame.name:SetTextHeight(10)
         end
