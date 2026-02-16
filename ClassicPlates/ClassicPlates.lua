@@ -156,15 +156,16 @@ local function HandleNamePlateAdded(unit)
     end
 
     hooksecurefunc(frame, "UpdateAnchors", function()
-        frame.castBar:SetHeight(12)
         frame.castBar:ClearAllPoints()
         if ClassicPlatesDB.largerPlates then
+            frame.castBar:SetHeight(16)
             frame.castBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT")
             frame.castBar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT")
             frame.castBar.Text:SetTextHeight(14)
             frame.HealthBarsContainer:SetHeight(14)
             frame.name:SetTextHeight(14)
         else
+            frame.castBar:SetHeight(12)
             frame.castBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 26, 0)
             frame.castBar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -26, 0)
             if ClassicPlatesDB.smallerCastBarText then
@@ -180,11 +181,11 @@ local function HandleNamePlateAdded(unit)
         frame.castBar.Icon:ClearAllPoints()
         frame.castBar.Icon:SetPoint("CENTER", frame.castBar, "LEFT")
         frame.name:SetIgnoreParentScale(true)
-        frame.name:SetShadowOffset(1, -1)
-        frame.name:SetShadowColor(0, 0, 0, 1)
         frame.name:SetJustifyH("CENTER")
         frame.name:ClearAllPoints()
         frame.name:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP", 0, 4)
+        frame.name:SetShadowOffset(1, -1)
+        frame.name:SetShadowColor(0, 0, 0, 1)
         frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 10)
     end)
 end
