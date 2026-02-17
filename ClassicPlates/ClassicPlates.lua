@@ -47,6 +47,16 @@ local function SkinCastbar(self)
         self.Text:SetPoint("BOTTOMRIGHT")
     end
 
+    hooksecurefunc(self, 'HandleInterruptOrSpellFailed', function(_, event)
+        if ( self.Text ) then
+            if ( event == "UNIT_SPELLCAST_FAILED" ) then
+                self.Text:SetText(FAILED)
+            else
+                self.Text:SetText(INTERRUPTED)
+            end
+        end
+    end)
+
     hooksecurefunc(self, 'SetIsHighlightedCastTarget', function()
         if self.CastTargetIndicator then
             self.CastTargetIndicator:Hide()
