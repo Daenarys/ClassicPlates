@@ -8,7 +8,6 @@ local function UpdateVersion()
     print("|A:gmchat-icon-blizz:16:16|aClassic |cff00c0ffPlates|r: Updated to v" .. ClassicPlatesVersion)
 end
 
-ClassicPlates.initializedAddon = false
 local initFrame = CreateFrame("Frame")
 initFrame:RegisterEvent("PLAYER_LOGIN")
 initFrame:SetScript("OnEvent", function()
@@ -28,8 +27,6 @@ initFrame:SetScript("OnEvent", function()
     else
         ClassicPlatesVersion = CURRENT_VERSION
     end
-
-    ClassicPlates.initializedAddon = true
 end)
 
 hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
