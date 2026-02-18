@@ -4,8 +4,3 @@ ClassicPlates_Defaults.DefaultConfig = {
     largerPlates = false,
     smallerCastBarText = false,
 }
-
-ClassicPlates_Defaults.Config = {
-    largerPlates,
-    smallerCastBarText,
-}
