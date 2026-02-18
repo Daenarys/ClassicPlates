@@ -37,6 +37,11 @@ hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
     self.CrowdControlListFrame:SetAlpha(0)
 
     for auraItemFrame in self.auraItemFramePool:EnumerateActive() do
+        if not auraItemFrame.Border then
+            auraItemFrame.Border = auraItemFrame:CreateTexture(nil, "BACKGROUND")
+            auraItemFrame.Border:SetAllPoints(auraItemFrame)
+            auraItemFrame.Border:SetColorTexture(0, 0, 0, 1)
+        end
         if auraItemFrame.Cooldown then
             auraItemFrame.Cooldown:SetHideCountdownNumbers(true)
         end
@@ -197,7 +202,11 @@ local function HandleNamePlateAdded(unit)
         frame.name:SetJustifyH("CENTER")
         frame.name:ClearAllPoints()
         frame.name:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP", 0, 4)
-        frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 10)
+        if frame.HealthBarsContainer.healthBar:IsTarget() or frame.name:IsShown() then
+            frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 10)
+        else
+            frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, -20)
+        end
     end)
 end
 
