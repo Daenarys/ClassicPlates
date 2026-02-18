@@ -205,7 +205,7 @@ local function HandleNamePlateAdded(unit)
         if frame.HealthBarsContainer.healthBar:IsTarget() or frame.name:IsShown() then
             frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 10)
         else
-            frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, -20)
+            frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, -18)
         end
     end)
 end
