@@ -25,21 +25,6 @@ lpcheckbox:SetScript('OnClick', function(self)
     ClassicPlatesDB.largerPlates = enabled
 end)
 
--- smaller castbar text
-local sctcheckbox = CreateFrame("CheckButton", nil, panel, "InterfaceOptionsCheckButtonTemplate")
-sctcheckbox:SetPoint("TOPLEFT", 16, -48)
-sctcheckbox.Text:SetFontObject('GameFontNormal')
-sctcheckbox.Text:SetText("Smaller CastBar Text")
-
-sctcheckbox:SetScript('OnShow', function(self)
-    self:SetChecked(ClassicPlatesDB.smallerCastBarText)
-end)
-
-sctcheckbox:SetScript('OnClick', function(self)
-    local enabled = self:GetChecked()
-    ClassicPlatesDB.smallerCastBarText = enabled
-end)
-
 ------------------------------------
 -- Slash Chat Command
 ------------------------------------

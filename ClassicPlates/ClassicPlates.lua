@@ -183,11 +183,7 @@ local function HandleNamePlateAdded(unit)
             frame.castBar:SetHeight(12)
             frame.castBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 26, 0)
             frame.castBar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -26, 0)
-            if ClassicPlatesDB.smallerCastBarText then
-                frame.castBar.Text:SetTextHeight(10)
-            else
-                frame.castBar.Text:SetTextHeight(12)
-            end
+            frame.castBar.Text:SetTextHeight(11)
             frame.HealthBarsContainer:SetHeight(5.5)
             frame.name:SetFontObject("CpSystemFont_NamePlate")
         end
