@@ -80,6 +80,8 @@ local function SkinCastbar(self)
 end
 
 local function SkinHealthBar(frame)
+    local isTarget = frame.healthBar:IsTarget()
+
     frame.healthBar.barTexture:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
     frame.healthBar.bgTexture:SetAlpha(0)
     frame.healthBar.selectedBorder:SetAlpha(0)
@@ -111,14 +113,16 @@ local function SkinHealthBar(frame)
         PixelUtil.SetPoint(frame.cpBorder.Top, "BOTTOMRIGHT", frame.cpBorder, "TOPRIGHT", 0, 0)
     end
 
+    for i, texture in ipairs(frame.cpBorder.Textures) do
+        if isTarget then
+            texture:SetColorTexture(1, 1, 1)
+        else
+            texture:SetColorTexture(0, 0, 0)
+        end
+    end
+
     hooksecurefunc(frame.healthBar, "UpdateSelectionBorder", function()
         local isTarget = frame.healthBar:IsTarget()
-
-        if isTarget then
-            frame.healthBar.barTexture:SetBlendMode("ADD")
-        else
-            frame.healthBar.barTexture:SetBlendMode("BLEND")
-        end
 
         for i, texture in ipairs(frame.cpBorder.Textures) do
             if isTarget then
