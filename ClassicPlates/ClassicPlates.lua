@@ -114,6 +114,12 @@ local function SkinHealthBar(frame)
     hooksecurefunc(frame.healthBar, "UpdateSelectionBorder", function()
         local isTarget = frame.healthBar:IsTarget()
 
+        if isTarget then
+            frame.healthBar.barTexture:SetBlendMode("ADD")
+        else
+            frame.healthBar.barTexture:SetBlendMode("BLEND")
+        end
+
         for i, texture in ipairs(frame.cpBorder.Textures) do
             if isTarget then
                 texture:SetColorTexture(1, 1, 1)
