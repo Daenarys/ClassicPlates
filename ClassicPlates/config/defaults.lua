@@ -1,5 +1,5 @@
-if ClassicPlates_Defaults == nil then ClassicPlates_Defaults = {} end
+local AddonName, AddonTable = ...
 
-ClassicPlates_Defaults.DefaultConfig = {
+AddonTable.Defaults = {
     largerPlates = false,
 }

@@ -1,4 +1,4 @@
-if ClassicPlates_OptionsPanel == nil then ClassicPlates_OptionsPanel = {} end
+local AddonName, AddonTable = ...
 
 ------------------------------------
 -- Options Panel

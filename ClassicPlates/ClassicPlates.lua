@@ -1,6 +1,5 @@
-if ClassicPlates == nil then ClassicPlates = {} end
-
-local CURRENT_VERSION = C_AddOns.GetAddOnMetadata("ClassicPlates", 'Version')
+local AddonName, AddonTable = ...
+local CURRENT_VERSION = C_AddOns.GetAddOnMetadata(AddonName, 'Version')
 
 local function UpdateVersion()
     ClassicPlatesVersion = CURRENT_VERSION
@@ -12,7 +11,7 @@ local initFrame = CreateFrame("Frame")
 initFrame:RegisterEvent("PLAYER_LOGIN")
 initFrame:SetScript("OnEvent", function()
     ClassicPlatesDB = ClassicPlatesDB or {}
-    for k, v in pairs(ClassicPlates_Defaults.DefaultConfig) do
+    for k, v in pairs(AddonTable.Defaults) do
         if ClassicPlatesDB[k] == nil then
             ClassicPlatesDB[k] = v
         end
