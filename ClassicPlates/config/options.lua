@@ -14,7 +14,8 @@ panel.categoryID = category:GetID()
 local lpcheckbox = CreateFrame("CheckButton", nil, panel, "InterfaceOptionsCheckButtonTemplate")
 lpcheckbox:SetPoint("TOPLEFT", 16, -16)
 lpcheckbox.Text:SetFontObject('GameFontNormal')
-lpcheckbox.Text:SetText("Larger Plates")
+lpcheckbox.Text:SetText(UNIT_NAMEPLATES_MAKE_LARGER)
+lpcheckbox:SetHitRectInsets(0, -lpcheckbox.Text:GetStringWidth(), 0, 0)
 
 lpcheckbox:SetScript('OnShow', function(self)
     self:SetChecked(ClassicPlatesDB.largerPlates)
@@ -23,6 +24,15 @@ end)
 lpcheckbox:SetScript('OnClick', function(self)
     local enabled = self:GetChecked()
     ClassicPlatesDB.largerPlates = enabled
+end)
+
+lpcheckbox:SetScript('OnEnter', function(self)
+    GameTooltip:SetOwner(self, 'ANCHOR_RIGHT')
+    GameTooltip:SetText(OPTION_TOOLTIP_UNIT_NAMEPLATES_MAKE_LARGER)
+end)
+
+lpcheckbox:SetScript('OnLeave', function(self)
+    GameTooltip:Hide()
 end)
 
 ------------------------------------
