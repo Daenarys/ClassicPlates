@@ -1,5 +1,5 @@
-local AddonName, AddonTable = ...
+local AddonName, Addon = ...
 
-AddonTable.Defaults = {
+Addon.Defaults = {
     largerPlates = false,
 }

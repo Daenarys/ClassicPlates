@@ -1,17 +1,11 @@
-local AddonName, AddonTable = ...
+local AddonName, Addon = ...
 local CURRENT_VERSION = C_AddOns.GetAddOnMetadata(AddonName, 'Version')
 
-local function UpdateVersion()
-    ClassicPlatesVersion = CURRENT_VERSION
-
-    print("|A:gmchat-icon-blizz:16:16|aClassic |cff00c0ffPlates|r: Updated to v" .. ClassicPlatesVersion)
-end
-
-local initFrame = CreateFrame("Frame")
-initFrame:RegisterEvent("PLAYER_LOGIN")
-initFrame:SetScript("OnEvent", function()
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("ADDON_LOADED")
+frame:SetScript("OnEvent", function()
     ClassicPlatesDB = ClassicPlatesDB or {}
-    for k, v in pairs(AddonTable.Defaults) do
+    for k, v in pairs(Addon.Defaults) do
         if ClassicPlatesDB[k] == nil then
             ClassicPlatesDB[k] = v
         end
@@ -20,13 +14,18 @@ initFrame:SetScript("OnEvent", function()
     --version update
     if ClassicPlatesVersion then
         if ClassicPlatesVersion ~= CURRENT_VERSION then
-            UpdateVersion()
+            Addon:UpdateVersion()
         end
-    --new user
     else
         ClassicPlatesVersion = CURRENT_VERSION
     end
 end)
+
+function Addon:UpdateVersion()
+    ClassicPlatesVersion = CURRENT_VERSION
+
+    print("|A:gmchat-icon-blizz:16:16|aClassic |cff00c0ffPlates|r: Updated to v" .. ClassicPlatesVersion)
+end
 
 hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
     self.BuffListFrame:SetAlpha(0)
