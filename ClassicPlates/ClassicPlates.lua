@@ -178,6 +178,12 @@ local function HandleNamePlateAdded(unit)
         ShowBorder(frame.HealthBarsContainer)
     end
 
+    frame.selectionHighlight:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
+    frame.selectionHighlight:SetAlpha(0.25)
+    frame.selectionHighlight:SetBlendMode("ADD")
+    frame.selectionHighlight:SetPoint("TOPLEFT", frame.HealthBarsContainer)
+    frame.selectionHighlight:SetPoint("BOTTOMRIGHT", frame.HealthBarsContainer)
+
     hooksecurefunc(frame, "UpdateAnchors", function()
         frame.castBar:ClearAllPoints()
         if ClassicPlatesDB.largerPlates then
