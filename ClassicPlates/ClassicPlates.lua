@@ -113,9 +113,9 @@ local function SkinHealthBar(frame)
 
     for i, texture in ipairs(frame.cpBorder.Textures) do
         if isTarget then
-            texture:SetColorTexture(1, 1, 1)
+            texture:SetColorTexture(1, 1, 1, 0.9)
         else
-            texture:SetColorTexture(0, 0, 0)
+            texture:SetColorTexture(0, 0, 0, 1)
         end
     end
 
@@ -124,9 +124,9 @@ local function SkinHealthBar(frame)
 
         for i, texture in ipairs(frame.cpBorder.Textures) do
             if isTarget then
-                texture:SetColorTexture(1, 1, 1)
+                texture:SetColorTexture(1, 1, 1, 0.9)
             else
-                texture:SetColorTexture(0, 0, 0)
+                texture:SetColorTexture(0, 0, 0, 1)
             end
         end
     end)
