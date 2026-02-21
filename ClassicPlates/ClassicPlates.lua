@@ -178,11 +178,12 @@ local function HandleNamePlateAdded(unit)
         ShowBorder(frame.HealthBarsContainer)
     end
 
-    frame.selectionHighlight:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
-    frame.selectionHighlight:SetAlpha(0.25)
-    frame.selectionHighlight:SetBlendMode("ADD")
-    frame.selectionHighlight:SetPoint("TOPLEFT", frame.HealthBarsContainer)
-    frame.selectionHighlight:SetPoint("BOTTOMRIGHT", frame.HealthBarsContainer)
+    if frame.selectionHighlight then
+        frame.selectionHighlight:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
+        frame.selectionHighlight:SetAlpha(0.25)
+        frame.selectionHighlight:SetBlendMode("ADD")
+        frame.selectionHighlight:SetAllPoints(frame.HealthBarsContainer)
+    end
 
     hooksecurefunc(frame, "UpdateAnchors", function()
         frame.castBar:ClearAllPoints()
@@ -210,7 +211,7 @@ local function HandleNamePlateAdded(unit)
         frame.name:SetIgnoreParentScale(true)
         frame.name:SetJustifyH("CENTER")
         frame.name:ClearAllPoints()
-        frame.name:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP", 0, 4)
+        frame.name:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP", 0, 5)
         if frame.HealthBarsContainer.healthBar:IsTarget() or frame.name:IsShown() then
             frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 10)
         else
