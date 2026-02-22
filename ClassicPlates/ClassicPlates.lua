@@ -196,6 +196,9 @@ local function HandleNamePlateAdded(unit)
             frame.castBar.Text:SetTextHeight(16)
             frame.HealthBarsContainer:SetHeight(14)
             frame.name:SetFontObject("CpSystemFont_LargeNamePlate")
+            if (frame.ClassificationFrame.classificationIndicator) then
+                frame.ClassificationFrame.classificationIndicator:SetScale(1.4)
+            end
         else
             frame.castBar:SetHeight(12)
             frame.castBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 26, 0)
@@ -205,6 +208,9 @@ local function HandleNamePlateAdded(unit)
             frame.castBar.Text:SetTextHeight(12)
             frame.HealthBarsContainer:SetHeight(5.5)
             frame.name:SetFontObject("CpSystemFont_NamePlate")
+            if (frame.ClassificationFrame.classificationIndicator) then
+                frame.ClassificationFrame.classificationIndicator:SetScale(1)
+            end
         end
         frame.castBar.Icon:ClearAllPoints()
         frame.castBar.Icon:SetPoint("CENTER", frame.castBar, "LEFT")
