@@ -86,7 +86,7 @@
 	</FontFamily>
 	<FontFamily name="CpSystemFont_LargeNamePlate" virtual="true">
 		<Member alphabet="roman">
-			<Font font="Fonts\FRIZQT__.TTF" height="15">
+			<Font font="Fonts\FRIZQT__.TTF" height="13">
 				<Shadow x="1" y="-1">
 					<Color r="0" g="0" b="0"/>
 				</Shadow>
