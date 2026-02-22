@@ -6,7 +6,7 @@ local AddonName, Addon = ...
 local panel = CreateFrame("Frame")
 panel.name = "|A:gmchat-icon-blizz:16:16|aClassic |cff00c0ffPlates|r"
 
-local category = Settings.RegisterCanvasLayoutCategory(panel, panel.name, panel.name)
+local category = Settings.RegisterCanvasLayoutCategory(panel, panel.name)
 Settings.RegisterAddOnCategory(category)
 panel.categoryID = category:GetID()
 
