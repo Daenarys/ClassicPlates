@@ -187,6 +187,7 @@ local function HandleNamePlateAdded(unit)
 
     hooksecurefunc(frame, "UpdateAnchors", function()
         frame.castBar:ClearAllPoints()
+        frame.ClassificationFrame:ClearAllPoints()
         if ClassicPlatesDB.largerPlates then
             frame.castBar:SetHeight(20)
             frame.castBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT")
@@ -196,6 +197,7 @@ local function HandleNamePlateAdded(unit)
             frame.castBar.Text:SetTextHeight(16)
             frame.HealthBarsContainer:SetHeight(14)
             frame.name:SetFontObject("CpSystemFont_LargeNamePlate")
+            frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -4, 0)
             if (frame.ClassificationFrame.classificationIndicator) then
                 frame.ClassificationFrame.classificationIndicator:SetScale(1.4)
             end
@@ -208,6 +210,7 @@ local function HandleNamePlateAdded(unit)
             frame.castBar.Text:SetTextHeight(12)
             frame.HealthBarsContainer:SetHeight(5.5)
             frame.name:SetFontObject("CpSystemFont_NamePlate")
+            frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -1, 0)
             if (frame.ClassificationFrame.classificationIndicator) then
                 frame.ClassificationFrame.classificationIndicator:SetScale(1)
             end
