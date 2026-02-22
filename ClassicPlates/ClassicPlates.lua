@@ -46,7 +46,7 @@ end)
 local function SkinCastbar(self)
     if self.Text then
         self.Text:ClearAllPoints()
-        self.Text:SetPoint("TOPLEFT")
+        self.Text:SetPoint("TOPLEFT", 0, -1)
         self.Text:SetPoint("BOTTOMRIGHT")
     end
 
@@ -220,7 +220,7 @@ local function HandleNamePlateAdded(unit)
         frame.name:SetIgnoreParentScale(true)
         frame.name:SetJustifyH("CENTER")
         frame.name:ClearAllPoints()
-        frame.name:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP", 0, 5)
+        frame.name:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP", 0, 4)
         if frame.HealthBarsContainer.healthBar:IsTarget() or frame.name:IsShown() then
             frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 10)
         else
