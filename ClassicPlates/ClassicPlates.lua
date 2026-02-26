@@ -172,7 +172,7 @@ local function HandleNamePlateAdded(unit)
         frame.HealthBarsContainer.skinned = true
     end
 
-    if UnitNameplateShowsWidgetsOnly(frame.unit) then
+    if UnitNameplateShowsWidgetsOnly(unit) then
         HideBorder(frame.HealthBarsContainer)
     else
         ShowBorder(frame.HealthBarsContainer)
