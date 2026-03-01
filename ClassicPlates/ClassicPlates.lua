@@ -43,7 +43,65 @@ hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
     end
 end)
 
+local castbarColors = {}
+castbarColors.Standard = CreateColor(1.0, 0.7, 0.0, 1)
+castbarColors.Channel = CreateColor(0.0, 1.0, 0.0, 1)
+castbarColors.Uninterruptable = CreateColor(0.7, 0.7, 0.7, 1)
+castbarColors.Interrupted = CreateColor(1, 0, 0, 1)
+
 local function SkinCastbar(self)
+    if self:IsForbidden() then return end
+
+    if ClassicPlatesDB.oldCastbars then
+        if self.Background then
+            self.Background:SetColorTexture(0.2, 0.2, 0.2, 0.85)
+        end
+
+        hooksecurefunc(self, 'GetTypeInfo', function()
+            if UnitCastingInfo(self.unit) then
+                local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo(self.unit)
+                self:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Standard)
+            elseif UnitChannelInfo(self.unit) then
+                local _, _, _, _, _, _, notInterruptible = UnitChannelInfo(self.unit)
+                self:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Channel)
+            end
+        end)
+
+        hooksecurefunc(self, 'UpdateShownState', function()
+            self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+            self.Spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
+            self.Spark:SetSize(16, 16)
+            self.Spark:SetBlendMode("ADD")
+            if self.channeling then
+                self.Spark:Hide()
+            end
+        end)
+
+        hooksecurefunc(self, 'PlayInterruptAnims', function()
+            self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+            self:GetStatusBarTexture():SetVertexColor(castbarColors.Interrupted:GetRGBA())
+            self:SetValue(self.maxValue)
+            self.Spark:Hide()
+        end)
+
+        hooksecurefunc(self, 'PlayFinishAnim', function()
+            self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+            self.Flash:SetTexture("Interface\\TargetingFrame\\UI-StatusBar")
+            self.Flash:SetVertexColor(self:GetStatusBarColor())
+            self.Flash:ClearAllPoints()
+            self.Flash:SetAllPoints()
+            if not self.NewFlash then
+                self.NewFlash = self.Flash:CreateAnimationGroup()
+                self.NewFlash:SetToFinalAlpha(true)
+                local FlashAnim = self.NewFlash:CreateAnimation("Alpha") 
+                FlashAnim:SetDuration(0.2)
+                FlashAnim:SetFromAlpha(1)
+                FlashAnim:SetToAlpha(0)
+            end
+            self.NewFlash:Play()
+        end)
+    end
+
     if self.Text then
         self.Text:ClearAllPoints()
         self.Text:SetPoint("TOPLEFT", 0, -1)
