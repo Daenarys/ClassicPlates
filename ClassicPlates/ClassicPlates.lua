@@ -29,7 +29,6 @@ end
 
 hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
     self.BuffListFrame:SetAlpha(0)
-    self.CrowdControlListFrame:SetAlpha(0)
 
     for auraItemFrame in self.auraItemFramePool:EnumerateActive() do
         if not auraItemFrame.Border then
