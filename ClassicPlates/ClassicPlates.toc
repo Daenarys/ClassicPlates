@@ -3,7 +3,7 @@
 ## Title: Classic |cff00c0ffPlates
 ## Notes: Restores the classic nameplates
 ## Author: luckfore
-## Version: 1.16
+## Version: 1.17
 ## SavedVariables: ClassicPlatesDB, ClassicPlatesVersion
 config/defaults.lua
 config/options.lua
