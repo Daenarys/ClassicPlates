@@ -28,7 +28,9 @@ function Addon:UpdateVersion()
 end
 
 hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
-    self.BuffListFrame:SetAlpha(0)
+    if self.BuffListFrame then
+        self.BuffListFrame:SetAlpha(0)
+    end
 
     for auraItemFrame in self.auraItemFramePool:EnumerateActive() do
         if not auraItemFrame.Border then
