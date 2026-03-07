@@ -24,7 +24,7 @@ end)
 function Addon:UpdateVersion()
     ClassicPlatesVersion = CURRENT_VERSION
 
-    print("|A:gmchat-icon-blizz:16:16|aClassic |cff00c0ffPlates|r: Updated to v" .. ClassicPlatesVersion)
+    print("|cff33ff99Classic Plates|r: Updated to v" .. ClassicPlatesVersion)
 end
 
 hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
@@ -260,7 +260,7 @@ local function HandleNamePlateAdded(unit)
             frame.castBar.BorderShield:SetSize(16, 18)
             frame.castBar.Icon:SetSize(18, 18)
             frame.castBar.Text:SetTextHeight(14)
-            frame.HealthBarsContainer:SetHeight(14)
+            PixelUtil.SetHeight(frame.HealthBarsContainer, 15)
             frame.name:SetFontObject("CpSystemFont_LargeNamePlate")
             frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -4, 0)
             if (frame.ClassificationFrame.classificationIndicator) then
@@ -273,7 +273,7 @@ local function HandleNamePlateAdded(unit)
             frame.castBar.BorderShield:SetSize(10, 12)
             frame.castBar.Icon:SetSize(14, 14)
             frame.castBar.Text:SetTextHeight(12)
-            frame.HealthBarsContainer:SetHeight(5.5)
+            PixelUtil.SetHeight(frame.HealthBarsContainer, 5)
             frame.name:SetFontObject("CpSystemFont_NamePlate")
             frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -1, 0)
             if (frame.ClassificationFrame.classificationIndicator) then

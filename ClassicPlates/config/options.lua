@@ -4,7 +4,7 @@ local AddonName, Addon = ...
 -- Options Panel
 ------------------------------------
 local panel = CreateFrame("Frame")
-panel.name = "|A:gmchat-icon-blizz:16:16|aClassic |cff00c0ffPlates|r"
+panel.name = AddonName
 
 local category = Settings.RegisterCanvasLayoutCategory(panel, panel.name)
 Settings.RegisterAddOnCategory(category)
@@ -68,7 +68,7 @@ SLASH_CLASSICPLATES2 = "/classicplates"
 
 SlashCmdList["CLASSICPLATES"] = function()
     if InCombatLockdown() then
-        print("|A:gmchat-icon-blizz:16:16|aClassic |cff00c0ffPlates|r:", _G.ERR_NOT_IN_COMBAT)
+        print("|cff33ff99Classic Plates|r:", _G.ERR_NOT_IN_COMBAT)
         return
     end
 
