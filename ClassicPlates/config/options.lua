@@ -14,16 +14,16 @@ panel.categoryID = category:GetID()
 local occheckbox = CreateFrame("CheckButton", nil, panel, "InterfaceOptionsCheckButtonTemplate")
 occheckbox:SetPoint("TOPLEFT", 16, -16)
 occheckbox.Text:SetFontObject('GameFontNormal')
-occheckbox.Text:SetText("Classic Castbars")
+occheckbox.Text:SetText("Classic Castbar")
 occheckbox:SetHitRectInsets(0, -occheckbox.Text:GetStringWidth(), 0, 0)
 
 occheckbox:SetScript('OnShow', function(self)
-    self:SetChecked(ClassicPlatesDB.oldCastbars)
+    self:SetChecked(ClassicPlatesDB.oldCastbar)
 end)
 
 occheckbox:SetScript('OnClick', function(self)
     local enabled = self:GetChecked()
-    ClassicPlatesDB.oldCastbars = enabled
+    ClassicPlatesDB.oldCastbar = enabled
 end)
 
 occheckbox:SetScript('OnEnter', function(self)
