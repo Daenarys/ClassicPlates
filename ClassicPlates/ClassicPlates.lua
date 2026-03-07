@@ -260,7 +260,11 @@ local function HandleNamePlateAdded(unit)
             frame.castBar.BorderShield:SetSize(16, 18)
             frame.castBar.Icon:SetSize(18, 18)
             frame.castBar.Text:SetTextHeight(14)
-            PixelUtil.SetHeight(frame.HealthBarsContainer, 15)
+            if frame.HealthBarsContainer.healthBar:IsTarget() then
+                PixelUtil.SetHeight(frame.HealthBarsContainer, 12)
+            else
+                PixelUtil.SetHeight(frame.HealthBarsContainer, 10)
+            end
             frame.name:SetFontObject("CpSystemFont_LargeNamePlate")
             frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -4, 0)
             if (frame.ClassificationFrame.classificationIndicator) then
@@ -273,7 +277,11 @@ local function HandleNamePlateAdded(unit)
             frame.castBar.BorderShield:SetSize(10, 12)
             frame.castBar.Icon:SetSize(14, 14)
             frame.castBar.Text:SetTextHeight(12)
-            PixelUtil.SetHeight(frame.HealthBarsContainer, 5)
+            if frame.HealthBarsContainer.healthBar:IsTarget() then
+                PixelUtil.SetHeight(frame.HealthBarsContainer, 5)
+            else
+                PixelUtil.SetHeight(frame.HealthBarsContainer, 4)
+            end
             frame.name:SetFontObject("CpSystemFont_NamePlate")
             frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -1, 0)
             if (frame.ClassificationFrame.classificationIndicator) then
@@ -282,10 +290,11 @@ local function HandleNamePlateAdded(unit)
         end
         frame.castBar.Icon:ClearAllPoints()
         frame.castBar.Icon:SetPoint("CENTER", frame.castBar, "LEFT")
+        frame.HealthBarsContainer:SetIgnoreParentScale(true)
         frame.name:SetIgnoreParentScale(true)
         frame.name:SetJustifyH("CENTER")
         frame.name:ClearAllPoints()
-        frame.name:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP", 0, 4)
+        PixelUtil.SetPoint(frame.name, "BOTTOM", frame.HealthBarsContainer, "TOP", 0, 4)
         if frame.HealthBarsContainer.healthBar:IsTarget() or frame.name:IsShown() then
             frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 10)
         else
