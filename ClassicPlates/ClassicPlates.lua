@@ -255,16 +255,12 @@ local function HandleNamePlateAdded(unit)
         frame.ClassificationFrame:ClearAllPoints()
         if ClassicPlatesDB.largerPlates then
             frame.castBar:SetHeight(20)
-            frame.castBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT")
-            frame.castBar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT")
+            PixelUtil.SetPoint(frame.castBar, "BOTTOMLEFT", frame, "BOTTOMLEFT", 0, 0)
+            PixelUtil.SetPoint(frame.castBar, "BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
             frame.castBar.BorderShield:SetSize(16, 18)
             frame.castBar.Icon:SetSize(18, 18)
             frame.castBar.Text:SetTextHeight(14)
-            if frame.HealthBarsContainer.healthBar:IsTarget() then
-                PixelUtil.SetHeight(frame.HealthBarsContainer, 12)
-            else
-                PixelUtil.SetHeight(frame.HealthBarsContainer, 10)
-            end
+            PixelUtil.SetHeight(frame.HealthBarsContainer, 12)
             frame.name:SetFontObject("CpSystemFont_LargeNamePlate")
             frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -4, 0)
             if (frame.ClassificationFrame.classificationIndicator) then
@@ -272,16 +268,12 @@ local function HandleNamePlateAdded(unit)
             end
         else
             frame.castBar:SetHeight(12)
-            frame.castBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 26, 0)
-            frame.castBar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -26, 0)
+            PixelUtil.SetPoint(frame.castBar, "BOTTOMLEFT", frame, "BOTTOMLEFT", 26, 0)
+            PixelUtil.SetPoint(frame.castBar, "BOTTOMRIGHT", frame, "BOTTOMRIGHT", -26, 0)
             frame.castBar.BorderShield:SetSize(10, 12)
             frame.castBar.Icon:SetSize(14, 14)
             frame.castBar.Text:SetTextHeight(12)
-            if frame.HealthBarsContainer.healthBar:IsTarget() then
-                PixelUtil.SetHeight(frame.HealthBarsContainer, 5)
-            else
-                PixelUtil.SetHeight(frame.HealthBarsContainer, 4)
-            end
+            PixelUtil.SetHeight(frame.HealthBarsContainer, 5)
             frame.name:SetFontObject("CpSystemFont_NamePlate")
             frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -1, 0)
             if (frame.ClassificationFrame.classificationIndicator) then
@@ -290,7 +282,6 @@ local function HandleNamePlateAdded(unit)
         end
         frame.castBar.Icon:ClearAllPoints()
         frame.castBar.Icon:SetPoint("CENTER", frame.castBar, "LEFT")
-        frame.HealthBarsContainer:SetIgnoreParentScale(true)
         frame.name:SetIgnoreParentScale(true)
         frame.name:SetJustifyH("CENTER")
         frame.name:ClearAllPoints()
