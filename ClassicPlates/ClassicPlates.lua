@@ -30,93 +30,19 @@ end
 hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
     if self:IsForbidden() then return end
 
-    if self.BuffListFrame then
-        self.BuffListFrame:SetAlpha(0)
-    end
-
-    for auraItemFrame in self.auraItemFramePool:EnumerateActive() do
-        if not auraItemFrame.Border then
-            auraItemFrame.Border = auraItemFrame:CreateTexture(nil, "BACKGROUND")
-            auraItemFrame.Border:SetAllPoints(auraItemFrame)
-            auraItemFrame.Border:SetColorTexture(0, 0, 0, 1)
+    for aura in self.auraItemFramePool:EnumerateActive() do
+        if aura.Cooldown then
+            aura.Cooldown:SetHideCountdownNumbers(true)
         end
-        if auraItemFrame.Cooldown then
-            auraItemFrame.Cooldown:SetHideCountdownNumbers(true)
-        end
-        auraItemFrame:HookScript("OnEnter", function()
-            local tooltip = GetAppropriateTooltip()
-            tooltip:SetOwner(auraItemFrame, "ANCHOR_LEFT")
-            auraItemFrame:RefreshTooltip()
-        end)
     end
 end)
-
-local castbarColors = {}
-castbarColors.Standard = CreateColor(1.0, 0.7, 0.0, 1)
-castbarColors.Channel = CreateColor(0.0, 1.0, 0.0, 1)
-castbarColors.Uninterruptable = CreateColor(0.7, 0.7, 0.7, 1)
-castbarColors.Interrupted = CreateColor(1, 0, 0, 1)
 
 local function SkinCastbar(self)
     if self:IsForbidden() then return end
 
-    if ClassicPlatesDB.oldCastbar then
-        if self.Background then
-            self.Background:SetColorTexture(0.2, 0.2, 0.2, 0.85)
-        end
-
-        hooksecurefunc(self, 'GetTypeInfo', function()
-            if UnitCastingInfo(self.unit) then
-                local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo(self.unit)
-                self:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Standard)
-            elseif UnitChannelInfo(self.unit) then
-                local _, _, _, _, _, _, notInterruptible = UnitChannelInfo(self.unit)
-                self:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Channel)
-            end
-        end)
-
-        hooksecurefunc(self, 'UpdateShownState', function()
-            self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
-            self.Spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
-            if ClassicPlatesDB.largerPlates then
-                self.Spark:SetSize(32, 32)
-            else
-                self.Spark:SetSize(16, 16)
-            end
-            self.Spark:SetBlendMode("ADD")
-            if self.channeling then
-                self.Spark:Hide()
-            end
-        end)
-
-        hooksecurefunc(self, 'PlayInterruptAnims', function()
-            self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
-            self:GetStatusBarTexture():SetVertexColor(castbarColors.Interrupted:GetRGBA())
-            self:SetValue(self.maxValue)
-            self.Spark:Hide()
-        end)
-
-        hooksecurefunc(self, 'PlayFinishAnim', function()
-            self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
-            self.Flash:SetTexture("Interface\\TargetingFrame\\UI-StatusBar")
-            self.Flash:SetVertexColor(self:GetStatusBarColor())
-            self.Flash:ClearAllPoints()
-            self.Flash:SetAllPoints()
-            if not self.NewFlash then
-                self.NewFlash = self.Flash:CreateAnimationGroup()
-                self.NewFlash:SetToFinalAlpha(true)
-                local FlashAnim = self.NewFlash:CreateAnimation("Alpha") 
-                FlashAnim:SetDuration(0.2)
-                FlashAnim:SetFromAlpha(1)
-                FlashAnim:SetToAlpha(0)
-            end
-            self.NewFlash:Play()
-        end)
-    end
-
     if self.Text then
         self.Text:ClearAllPoints()
-        self.Text:SetPoint("TOPLEFT")
+        self.Text:SetPoint("TOPLEFT", 0, -1)
         self.Text:SetPoint("BOTTOMRIGHT")
     end
 
@@ -291,12 +217,19 @@ local function HandleNamePlateAdded(unit)
         frame.name:SetJustifyH("CENTER")
         frame.name:ClearAllPoints()
         PixelUtil.SetPoint(frame.name, "BOTTOM", frame.HealthBarsContainer, "TOP", 0, 4)
-        if frame.HealthBarsContainer.healthBar:IsTarget() or frame.name:IsShown() then
-            frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 10)
-        else
-            frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, -18)
+        if frame.AurasFrame.DebuffListFrame then
+            if frame.HealthBarsContainer.healthBar:IsTarget() or frame.name:IsShown() then
+                frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 10)
+            else
+                frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, -18)
+            end
         end
-        frame.AurasFrame.CrowdControlListFrame:SetPoint("LEFT", frame.AurasFrame.DebuffListFrame, "RIGHT")
+        if frame.AurasFrame.BuffListFrame then
+            frame.AurasFrame.BuffListFrame:SetAlpha(0)
+        end
+        if frame.AurasFrame.CrowdControlListFrame then
+            frame.AurasFrame.CrowdControlListFrame:SetPoint("LEFT", frame.AurasFrame.DebuffListFrame, "RIGHT")
+        end
     end)
 end
 
