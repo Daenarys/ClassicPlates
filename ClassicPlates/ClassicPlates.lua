@@ -286,7 +286,7 @@ local function HandleNamePlateAdded(unit)
             end
         end
         frame.castBar.Icon:ClearAllPoints()
-        frame.castBar.Icon:SetPoint("CENTER", frame.castBar, "LEFT")
+        PixelUtil.SetPoint(frame.castBar.Icon, "CENTER", frame.castBar, "LEFT", 0, 0)
         frame.name:SetIgnoreParentScale(true)
         frame.name:SetJustifyH("CENTER")
         frame.name:ClearAllPoints()
