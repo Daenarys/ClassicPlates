@@ -259,7 +259,7 @@ local function HandleNamePlateAdded(unit)
         frame.castBar:ClearAllPoints()
         frame.ClassificationFrame:ClearAllPoints()
         if ClassicPlatesDB.largerPlates then
-            frame.castBar:SetHeight(20)
+            frame.castBar:SetHeight(22)
             PixelUtil.SetPoint(frame.castBar, "BOTTOMLEFT", frame, "BOTTOMLEFT", 0, 0)
             PixelUtil.SetPoint(frame.castBar, "BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
             frame.castBar.BorderShield:SetSize(16, 18)
