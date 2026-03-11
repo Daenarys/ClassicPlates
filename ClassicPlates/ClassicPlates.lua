@@ -291,6 +291,7 @@ local function HandleNamePlateAdded(unit)
         else
             frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, -18)
         end
+        frame.AurasFrame.CrowdControlListFrame:SetPoint("LEFT", frame.AurasFrame.DebuffListFrame, "RIGHT")
     end)
 end
 
