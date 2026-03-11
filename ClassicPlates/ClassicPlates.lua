@@ -43,6 +43,11 @@ hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
         if auraItemFrame.Cooldown then
             auraItemFrame.Cooldown:SetHideCountdownNumbers(true)
         end
+        auraItemFrame:HookScript("OnEnter", function()
+            local tooltip = GetAppropriateTooltip()
+            tooltip:SetOwner(auraItemFrame, "ANCHOR_LEFT")
+            auraItemFrame:RefreshTooltip()
+        end)
     end
 end)
 
