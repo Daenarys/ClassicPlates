@@ -42,7 +42,7 @@ local function SkinCastbar(self)
 
     if self.Text then
         self.Text:ClearAllPoints()
-        self.Text:SetPoint("TOPLEFT", 0, -1)
+        self.Text:SetPoint("TOPLEFT")
         self.Text:SetPoint("BOTTOMRIGHT")
     end
 
@@ -213,6 +213,9 @@ local function HandleNamePlateAdded(unit)
         end
         frame.castBar.Icon:ClearAllPoints()
         PixelUtil.SetPoint(frame.castBar.Icon, "CENTER", frame.castBar, "LEFT", 0, 0)
+        frame.HealthBarsContainer:ClearAllPoints()
+        PixelUtil.SetPoint(frame.HealthBarsContainer, "BOTTOMLEFT", frame.castBar, "TOPLEFT", 0, 2.5)
+        PixelUtil.SetPoint(frame.HealthBarsContainer, "BOTTOMRIGHT", frame.castBar, "TOPRIGHT", 0, 2.5)
         frame.name:SetIgnoreParentScale(true)
         frame.name:SetJustifyH("CENTER")
         frame.name:ClearAllPoints()
