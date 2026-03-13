@@ -174,6 +174,10 @@ local function HandleNamePlateAdded(unit)
         ShowBorder(frame.HealthBarsContainer)
     end
 
+    if frame.behindCameraIcon then
+        frame.behindCameraIcon:SetAlpha(0)
+    end
+
     if frame.selectionHighlight then
         frame.selectionHighlight:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
         frame.selectionHighlight:SetAlpha(0.25)
