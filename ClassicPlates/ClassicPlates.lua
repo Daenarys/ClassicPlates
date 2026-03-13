@@ -37,6 +37,14 @@ hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
     end
 end)
 
+hooksecurefunc(NamePlateAurasMixin, "UpdateEnemyPlayerAuraFrames", function(self)
+    if self:IsForbidden() then return end
+
+    if self.CrowdControlListFrame then
+        self.CrowdControlListFrame:SetShown(true)
+    end
+end)
+
 local function SkinCastbar(self)
     if self:IsForbidden() then return end
 
