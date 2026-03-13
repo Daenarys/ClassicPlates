@@ -156,7 +156,7 @@ end
 
 local function HandleNamePlateAdded(unit)
     local nameplate, frame = GetSafeNameplate(unit)
-    if not frame then return end
+    if not frame or frame.skinned then return end
 
     if not frame.castBar.skinned then
         SkinCastbar(frame.castBar)
@@ -238,6 +238,8 @@ local function HandleNamePlateAdded(unit)
             frame.AurasFrame.CrowdControlListFrame:SetPoint("LEFT", frame.AurasFrame.DebuffListFrame, "RIGHT")
         end
     end)
+
+    frame.skinned = true
 end
 
 local f = CreateFrame("Frame")
