@@ -168,7 +168,7 @@ local function HandleNamePlateAdded(unit)
             frame.name:SetFontObject("CpSystemFont_LargeNamePlate")
             frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -4, 0)
             if (frame.ClassificationFrame.classificationIndicator) then
-                frame.ClassificationFrame.classificationIndicator:SetScale(1.4)
+                frame.ClassificationFrame.classificationIndicator:SetScale(1.2)
             end
         else
             frame.castBar:SetHeight(12)
@@ -179,9 +179,9 @@ local function HandleNamePlateAdded(unit)
             frame.castBar.Text:SetTextHeight(12)
             PixelUtil.SetHeight(frame.HealthBarsContainer, 6)
             frame.name:SetFontObject("CpSystemFont_NamePlate")
-            frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -1, 0)
+            frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -2, 0)
             if (frame.ClassificationFrame.classificationIndicator) then
-                frame.ClassificationFrame.classificationIndicator:SetScale(1)
+                frame.ClassificationFrame.classificationIndicator:SetScale(1.2)
             end
         end
         frame.castBar.Icon:ClearAllPoints()
