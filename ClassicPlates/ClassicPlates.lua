@@ -45,21 +45,6 @@ hooksecurefunc(NamePlateAurasMixin, "UpdateEnemyPlayerAuraFrames", function(self
     end
 end)
 
-hooksecurefunc(NamePlateClassificationFrameMixin, "UpdateClassificationIndicator", function(self)
-    if self:IsForbidden() then return end
-
-    if (self.classificationIndicator) then
-        local classification = self:GetClassification()
-        if classification == "elite" or classification == "worldboss" then
-            self.classificationIndicator:SetTexture("Interface\\AddOns\\ClassicPlates\\icons\\nameplates")
-            self.classificationIndicator:SetTexCoord(0.00390625, 0.148438, 0.234375, 0.507812)
-        elseif classification == "rareelite" then
-            self.classificationIndicator:SetTexture("Interface\\AddOns\\ClassicPlates\\icons\\nameplates")
-            self.classificationIndicator:SetTexCoord(0.00390625, 0.148438, 0.523438, 0.796875)
-        end
-    end
-end)
-
 local function SkinCastbar(self)
     if self:IsForbidden() then return end
 
@@ -168,7 +153,7 @@ local function HandleNamePlateAdded(unit)
             frame.name:SetFontObject("CpSystemFont_LargeNamePlate")
             frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -4, 0)
             if (frame.ClassificationFrame.classificationIndicator) then
-                frame.ClassificationFrame.classificationIndicator:SetScale(1.2)
+                frame.ClassificationFrame.classificationIndicator:SetScale(1.4)
             end
         else
             frame.castBar:SetHeight(12)
