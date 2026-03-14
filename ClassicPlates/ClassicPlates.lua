@@ -89,49 +89,26 @@ local function SkinHealthBar(frame)
     frame.healthBar.selectedBorder:SetAlpha(0)
     frame.healthBar.deselectedOverlay:SetAlpha(0)
 
-    if not frame.healthBar.background then
-        frame.healthBar.background = frame.healthBar:CreateTexture(nil, "BACKGROUND")
-        frame.healthBar.background:SetAllPoints(frame.healthBar)
-        frame.healthBar.background:SetColorTexture(0.2, 0.2, 0.2, 0.85)
-    end
+    frame.healthBar.background = frame.healthBar:CreateTexture(nil, "BACKGROUND")
+    frame.healthBar.background:SetAllPoints(frame.healthBar)
+    frame.healthBar.background:SetColorTexture(0.2, 0.2, 0.2, 0.85)
 
-    if not frame.healthBar.border then
-        frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "CpBorderTemplate")
+    frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "NamePlateFullBorderTemplate")
+    frame.healthBar.border:UpdateSizes()
 
-        PixelUtil.SetWidth(frame.healthBar.border.Left, 1, 2)
-        PixelUtil.SetPoint(frame.healthBar.border.Left, "TOPRIGHT", frame.healthBar.border, "TOPLEFT", 0, 1, 0, 2)
-        PixelUtil.SetPoint(frame.healthBar.border.Left, "BOTTOMRIGHT", frame.healthBar.border, "BOTTOMLEFT", 0, -1, 0, 2)
-
-        PixelUtil.SetWidth(frame.healthBar.border.Right, 1, 2)
-        PixelUtil.SetPoint(frame.healthBar.border.Right, "TOPLEFT", frame.healthBar.border, "TOPRIGHT", 0, 1, 0, 2)
-        PixelUtil.SetPoint(frame.healthBar.border.Right, "BOTTOMLEFT", frame.healthBar.border, "BOTTOMRIGHT", 0, -1, 0, 2)
-
-        PixelUtil.SetHeight(frame.healthBar.border.Bottom, 1, 2)
-        PixelUtil.SetPoint(frame.healthBar.border.Bottom, "TOPLEFT", frame.healthBar.border, "BOTTOMLEFT", 0, 0)
-        PixelUtil.SetPoint(frame.healthBar.border.Bottom, "TOPRIGHT", frame.healthBar.border, "BOTTOMRIGHT", 0, 0)
-
-        PixelUtil.SetHeight(frame.healthBar.border.Top, 1, 2)
-        PixelUtil.SetPoint(frame.healthBar.border.Top, "BOTTOMLEFT", frame.healthBar.border, "TOPLEFT", 0, 0)
-        PixelUtil.SetPoint(frame.healthBar.border.Top, "BOTTOMRIGHT", frame.healthBar.border, "TOPRIGHT", 0, 0)
-    end
-
-    for i, texture in ipairs(frame.healthBar.border.Textures) do
-        if isTarget then
-            texture:SetColorTexture(1, 1, 1, 0.9)
-        else
-            texture:SetColorTexture(0, 0, 0, 1)
-        end
+    if isTarget then
+        frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
+    else
+        frame.healthBar.border:SetVertexColor(0, 0, 0, 1)
     end
 
     hooksecurefunc(frame.healthBar, "UpdateSelectionBorder", function()
         local isTarget = frame.healthBar:IsTarget()
 
-        for i, texture in ipairs(frame.healthBar.border.Textures) do
-            if isTarget then
-                texture:SetColorTexture(1, 1, 1, 0.9)
-            else
-                texture:SetColorTexture(0, 0, 0, 1)
-            end
+        if isTarget then
+            frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
+        else
+            frame.healthBar.border:SetVertexColor(0, 0, 0, 1)
         end
     end)
 end
@@ -164,17 +141,7 @@ end
 
 local function HandleNamePlateAdded(unit)
     local nameplate, frame = GetSafeNameplate(unit)
-    if not frame or frame.skinned then return end
-
-    if not frame.castBar.skinned then
-        SkinCastbar(frame.castBar)
-        frame.castBar.skinned = true
-    end
-
-    if not frame.HealthBarsContainer.skinned then
-        SkinHealthBar(frame.HealthBarsContainer)
-        frame.HealthBarsContainer.skinned = true
-    end
+    if not frame then return end
 
     if UnitNameplateShowsWidgetsOnly(unit) then
         HideBorder(frame.HealthBarsContainer)
@@ -182,72 +149,77 @@ local function HandleNamePlateAdded(unit)
         ShowBorder(frame.HealthBarsContainer)
     end
 
-    if frame.behindCameraIcon then
-        frame.behindCameraIcon:SetAlpha(0)
-    end
+    if not frame.skinned then
+        SkinCastbar(frame.castBar)
+        SkinHealthBar(frame.HealthBarsContainer)
 
-    if frame.selectionHighlight then
-        frame.selectionHighlight:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
-        frame.selectionHighlight:SetAlpha(0.25)
-        frame.selectionHighlight:SetBlendMode("ADD")
-        frame.selectionHighlight:SetAllPoints(frame.HealthBarsContainer)
-    end
-
-    hooksecurefunc(frame, "UpdateAnchors", function()
-        frame.castBar:ClearAllPoints()
-        frame.ClassificationFrame:ClearAllPoints()
-        if ClassicPlatesDB.largerPlates then
-            frame.castBar:SetHeight(22)
-            PixelUtil.SetPoint(frame.castBar, "BOTTOMLEFT", frame, "BOTTOMLEFT", 0, 0)
-            PixelUtil.SetPoint(frame.castBar, "BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
-            frame.castBar.BorderShield:SetSize(16, 18)
-            frame.castBar.Icon:SetSize(18, 18)
-            frame.castBar.Text:SetTextHeight(14)
-            PixelUtil.SetHeight(frame.HealthBarsContainer, 15)
-            frame.name:SetFontObject("CpSystemFont_LargeNamePlate")
-            frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -4, 0)
-            if (frame.ClassificationFrame.classificationIndicator) then
-                frame.ClassificationFrame.classificationIndicator:SetScale(1.4)
-            end
-        else
-            frame.castBar:SetHeight(12)
-            PixelUtil.SetPoint(frame.castBar, "BOTTOMLEFT", frame, "BOTTOMLEFT", 26, 0)
-            PixelUtil.SetPoint(frame.castBar, "BOTTOMRIGHT", frame, "BOTTOMRIGHT", -26, 0)
-            frame.castBar.BorderShield:SetSize(10, 12)
-            frame.castBar.Icon:SetSize(14, 14)
-            frame.castBar.Text:SetTextHeight(12)
-            PixelUtil.SetHeight(frame.HealthBarsContainer, 6)
-            frame.name:SetFontObject("CpSystemFont_NamePlate")
-            frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -1, 0)
-            if (frame.ClassificationFrame.classificationIndicator) then
-                frame.ClassificationFrame.classificationIndicator:SetScale(1)
-            end
+        if frame.behindCameraIcon then
+            frame.behindCameraIcon:SetAlpha(0)
         end
-        frame.castBar.Icon:ClearAllPoints()
-        PixelUtil.SetPoint(frame.castBar.Icon, "CENTER", frame.castBar, "LEFT", 0, 0)
-        frame.HealthBarsContainer:ClearAllPoints()
-        PixelUtil.SetPoint(frame.HealthBarsContainer, "BOTTOMLEFT", frame.castBar, "TOPLEFT", 0, 2.5)
-        PixelUtil.SetPoint(frame.HealthBarsContainer, "BOTTOMRIGHT", frame.castBar, "TOPRIGHT", 0, 2.5)
-        frame.name:SetIgnoreParentScale(true)
-        frame.name:SetJustifyH("CENTER")
-        frame.name:ClearAllPoints()
-        PixelUtil.SetPoint(frame.name, "BOTTOM", frame.HealthBarsContainer, "TOP", 0, 4)
-        if frame.AurasFrame.DebuffListFrame then
-            if frame.HealthBarsContainer.healthBar:IsTarget() or frame.name:IsShown() then
-                frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 10)
+
+        if frame.selectionHighlight then
+            frame.selectionHighlight:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
+            frame.selectionHighlight:SetAlpha(0.25)
+            frame.selectionHighlight:SetBlendMode("ADD")
+            frame.selectionHighlight:SetAllPoints(frame.HealthBarsContainer)
+        end
+
+        hooksecurefunc(frame, "UpdateAnchors", function()
+            frame.castBar:ClearAllPoints()
+            frame.ClassificationFrame:ClearAllPoints()
+            if ClassicPlatesDB.largerPlates then
+                frame.castBar:SetHeight(22)
+                PixelUtil.SetPoint(frame.castBar, "BOTTOMLEFT", frame, "BOTTOMLEFT", 0, 0)
+                PixelUtil.SetPoint(frame.castBar, "BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
+                frame.castBar.BorderShield:SetSize(16, 18)
+                frame.castBar.Icon:SetSize(18, 18)
+                frame.castBar.Text:SetTextHeight(14)
+                PixelUtil.SetHeight(frame.HealthBarsContainer, 15)
+                frame.name:SetFontObject("CpSystemFont_LargeNamePlate")
+                frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -4, 0)
+                if (frame.ClassificationFrame.classificationIndicator) then
+                    frame.ClassificationFrame.classificationIndicator:SetScale(1.4)
+                end
             else
-                frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, -18)
+                frame.castBar:SetHeight(12)
+                PixelUtil.SetPoint(frame.castBar, "BOTTOMLEFT", frame, "BOTTOMLEFT", 26, 0)
+                PixelUtil.SetPoint(frame.castBar, "BOTTOMRIGHT", frame, "BOTTOMRIGHT", -26, 0)
+                frame.castBar.BorderShield:SetSize(10, 12)
+                frame.castBar.Icon:SetSize(14, 14)
+                frame.castBar.Text:SetTextHeight(12)
+                PixelUtil.SetHeight(frame.HealthBarsContainer, 6)
+                frame.name:SetFontObject("CpSystemFont_NamePlate")
+                frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -1, 0)
+                if (frame.ClassificationFrame.classificationIndicator) then
+                    frame.ClassificationFrame.classificationIndicator:SetScale(1)
+                end
             end
-        end
-        if frame.AurasFrame.BuffListFrame then
-            frame.AurasFrame.BuffListFrame:SetAlpha(0)
-        end
-        if frame.AurasFrame.CrowdControlListFrame then
-            frame.AurasFrame.CrowdControlListFrame:SetPoint("LEFT", frame.AurasFrame.DebuffListFrame, "RIGHT")
-        end
-    end)
+            frame.castBar.Icon:ClearAllPoints()
+            PixelUtil.SetPoint(frame.castBar.Icon, "CENTER", frame.castBar, "LEFT", 0, 0)
+            frame.HealthBarsContainer:ClearAllPoints()
+            PixelUtil.SetPoint(frame.HealthBarsContainer, "BOTTOMLEFT", frame.castBar, "TOPLEFT", 0, 2.5)
+            PixelUtil.SetPoint(frame.HealthBarsContainer, "BOTTOMRIGHT", frame.castBar, "TOPRIGHT", 0, 2.5)
+            frame.name:SetIgnoreParentScale(true)
+            frame.name:SetJustifyH("CENTER")
+            frame.name:ClearAllPoints()
+            PixelUtil.SetPoint(frame.name, "BOTTOM", frame.HealthBarsContainer, "TOP", 0, 4)
+            if frame.AurasFrame.DebuffListFrame then
+                if frame.HealthBarsContainer.healthBar:IsTarget() or frame.name:IsShown() then
+                    frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 10)
+                else
+                    frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, -18)
+                end
+            end
+            if frame.AurasFrame.BuffListFrame then
+                frame.AurasFrame.BuffListFrame:SetAlpha(0)
+            end
+            if frame.AurasFrame.CrowdControlListFrame then
+                frame.AurasFrame.CrowdControlListFrame:SetPoint("LEFT", frame.AurasFrame.DebuffListFrame, "RIGHT")
+            end
+        end)
 
-    frame.skinned = true
+        frame.skinned = true
+    end
 end
 
 local f = CreateFrame("Frame")
