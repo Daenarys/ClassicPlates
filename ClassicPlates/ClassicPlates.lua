@@ -262,9 +262,6 @@ local function HandleNamePlateAdded(unit)
         if frame.AurasFrame.BuffListFrame then
             frame.AurasFrame.BuffListFrame:SetAlpha(0)
         end
-        if frame.AurasFrame.CrowdControlListFrame then
-            frame.AurasFrame.CrowdControlListFrame:SetPoint("LEFT", frame.AurasFrame.DebuffListFrame, "RIGHT")
-        end
     end)
 
     frame.skinned = true
