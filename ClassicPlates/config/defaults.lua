@@ -1,6 +1,6 @@
 local AddonName, Addon = ...
 
 Addon.Defaults = {
-    largerPlates = false,
-    oldCastbar = true,
+	largerPlates = false,
+	oldCastbar = true,
 }
