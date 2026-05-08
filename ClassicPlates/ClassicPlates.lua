@@ -252,15 +252,15 @@ local function HandleNamePlateAdded(unit)
 		frame.name:SetJustifyH("CENTER")
 		frame.name:ClearAllPoints()
 		PixelUtil.SetPoint(frame.name, "BOTTOM", frame.HealthBarsContainer, "TOP", 0, 4)
+		if frame.AurasFrame.BuffListFrame then
+			frame.AurasFrame.BuffListFrame:SetAlpha(0)
+		end
 		if frame.AurasFrame.DebuffListFrame then
 			if frame.HealthBarsContainer.healthBar:IsTarget() or frame.name:IsShown() then
 				frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 10)
 			else
 				frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, -18)
 			end
-		end
-		if frame.AurasFrame.BuffListFrame then
-			frame.AurasFrame.BuffListFrame:SetAlpha(0)
 		end
 	end)
 
