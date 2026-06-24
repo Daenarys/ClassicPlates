@@ -32,6 +32,8 @@ hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
 
 	for aura in self.auraItemFramePool:EnumerateActive() do
 		if aura.Cooldown then
+			aura.Cooldown:SetEdgeTexture("Interface\\Cooldown\\edge")
+			aura.Cooldown:SetSwipeColor(0, 0, 0, .8)
 			aura.Cooldown:SetHideCountdownNumbers(true)
 		end
 	end
