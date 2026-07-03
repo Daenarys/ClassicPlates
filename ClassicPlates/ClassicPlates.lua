@@ -63,6 +63,24 @@ hooksecurefunc(NamePlateClassificationFrameMixin, "UpdateClassificationIndicator
 	end
 end)
 
+hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
+    if not frame or frame:IsForbidden() or not frame.unit then return end
+    -- Further processing only for nameplate units
+    if not frame.unit:find("nameplate") then return end
+
+	if ( CompactUnitFrame_IsTapDenied(frame) or (UnitIsDead(frame.unit) and not UnitIsPlayer(frame.unit)) ) then
+		frame.name:SetVertexColor(0.5, 0.5, 0.5)
+	elseif not ( frame.optionTable.colorNameBySelection ) then
+		if ( frame.optionTable.considerSelectionInCombatAsHostile and CompactUnitFrame_IsOnThreatListWithPlayer(frame.displayedUnit) and not UnitIsFriend("player", frame.unit)  ) then
+			frame.name:SetVertexColor(1.0, 0.0, 0.0)
+		else
+			frame.name:SetVertexColor(UnitSelectionColor(frame.unit, frame.optionTable.colorNameWithExtendedColors))
+		end
+	else
+		frame.name:SetVertexColor(1.0, 1.0, 1.0)
+	end
+end)
+
 local castbarColors = {}
 castbarColors.Standard = CreateColor(1.0, 0.7, 0.0, 1)
 castbarColors.Channel = CreateColor(0.0, 1.0, 0.0, 1)
@@ -269,14 +287,9 @@ local function HandleNamePlateAdded(unit)
 end
 
 local f = CreateFrame("Frame")
-f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 f:SetScript("OnEvent", function(self, event, unit)
-	if event == "PLAYER_LOGIN" then
-		if C_CVar.GetCVar("nameplateStyle") ~= "5" then
-			C_CVar.SetCVar("nameplateStyle", Enum.NamePlateStyle.Legacy)
-		end
-	elseif event == "NAME_PLATE_UNIT_ADDED" then
+	if event == "NAME_PLATE_UNIT_ADDED" then
 		HandleNamePlateAdded(unit)
 	end
 end)
