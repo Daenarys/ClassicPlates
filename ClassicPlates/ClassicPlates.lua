@@ -27,17 +27,12 @@ function Addon:UpdateVersion()
 	print("|cff33ff99Classic Plates|r: Updated to v" .. ClassicPlatesVersion)
 end
 
-hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
+hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	if self:IsForbidden() then return end
 
-	for aura in self.auraItemFramePool:EnumerateActive() do
-		if aura.Cooldown then
-			aura.Cooldown:SetEdgeTexture("Interface\\Cooldown\\edge")
-			aura.Cooldown:SetHideCountdownNumbers(true)
-		end
-		if aura.Icon then
-			aura.Icon:SetTexCoord(0.05, 0.95, 0.1, 0.6)
-		end
+	if self.Cooldown then
+		self.Cooldown:SetEdgeTexture("Interface\\Cooldown\\edge")
+		self.Cooldown:SetHideCountdownNumbers(true)
 	end
 end)
 
@@ -59,9 +54,9 @@ hooksecurefunc(NamePlateClassificationFrameMixin, "UpdateClassificationIndicator
 end)
 
 hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
-    if not frame or frame:IsForbidden() or not frame.unit then return end
-    -- Further processing only for nameplate units
-    if not frame.unit:find("nameplate") then return end
+	if not frame or frame:IsForbidden() or not frame.unit then return end
+	-- Further processing only for nameplate units
+	if not frame.unit:find("nameplate") then return end
 
 	if ( CompactUnitFrame_IsTapDenied(frame) or (UnitIsDead(frame.unit) and not UnitIsPlayer(frame.unit)) ) then
 		frame.name:SetVertexColor(0.5, 0.5, 0.5)
