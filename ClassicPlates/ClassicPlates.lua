@@ -43,6 +43,13 @@ hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
 	for _, aura in ipairs(items) do
 		aura:ClearAllPoints()
 		if prevAura then
+			aura:SetPoint("TOPLEFT", prevAura, "TOPLEFT", 37, 0)
+		else
+			aura:SetPoint("TOPLEFT", self.DebuffListFrame, "TOPLEFT")
+		end
+		prevAura = aura
+	end
+end)
 
 hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	if self:IsForbidden() then return end
