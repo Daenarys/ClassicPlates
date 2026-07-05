@@ -35,14 +35,9 @@ hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
 			aura.Cooldown:SetEdgeTexture("Interface\\Cooldown\\edge")
 			aura.Cooldown:SetHideCountdownNumbers(true)
 		end
-	end
-end)
-
-hooksecurefunc(NamePlateAurasMixin, "UpdateEnemyPlayerAuraFrames", function(self)
-	if self:IsForbidden() then return end
-
-	if self.CrowdControlListFrame then
-		self.CrowdControlListFrame:SetShown(true)
+		if aura.Icon then
+			aura.Icon:SetTexCoord(0.05, 0.95, 0.1, 0.6)
+		end
 	end
 end)
 
