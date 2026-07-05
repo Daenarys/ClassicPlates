@@ -48,6 +48,8 @@ hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 
 	if self.CountFrame then
 		self.CountFrame.Count:SetScale(1.6)
+		self.CountFrame.Count:ClearAllPoints()
+		self.CountFrame.Count:SetPoint("BOTTOMRIGHT", 2, -1)
 	end
 
 	if self.Icon then
