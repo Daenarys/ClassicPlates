@@ -30,7 +30,7 @@ end
 hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	if self:IsForbidden() then return end
 
-	self:SetSize(36, 24)
+	self:SetSize(32, 22)
 
 	select(2, self:GetRegions()):Hide()
 	select(3, self:GetRegions()):Hide()
@@ -47,11 +47,11 @@ hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	end
 
 	if self.CountFrame then
-		self.CountFrame.Count:SetScale(1.8)
+		self.CountFrame.Count:SetScale(1.6)
 	end
 
 	if self.Icon then
-		self.Icon:SetSize(32, 20)
+		self.Icon:SetSize(28, 18)
 		self.Icon:ClearAllPoints()
 		self.Icon:SetPoint("CENTER")
 		self.Icon:SetTexCoord(0.05, 0.95, 0.1, 0.6)
@@ -290,7 +290,7 @@ local function HandleNamePlateAdded(unit)
 			if frame.HealthBarsContainer.healthBar:IsTarget() or frame.name:IsShown() then
 				frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, 15)
 			else
-				frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, -18)
+				frame.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", frame.name, "TOP", 0, -15)
 			end
 		end
 	end)
