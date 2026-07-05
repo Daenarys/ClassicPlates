@@ -27,30 +27,6 @@ function Addon:UpdateVersion()
 	print("|cff33ff99Classic Plates|r: Updated to v" .. ClassicPlatesVersion)
 end
 
-hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
-	if self:IsForbidden() then return end
-
-	local items = {}
-	for aura in self.auraItemFramePool:EnumerateActive() do
-		table.insert(items, aura)
-	end
-
-	table.sort(items, function(a, b) 
-		return (a.layoutIndex or 0) < (b.layoutIndex or 0) 
-	end)
-
-	local prevAura = nil
-	for _, aura in ipairs(items) do
-		aura:ClearAllPoints()
-		if prevAura then
-			aura:SetPoint("TOPLEFT", prevAura, "TOPLEFT", 37, 0)
-		else
-			aura:SetPoint("TOPLEFT", self.DebuffListFrame, "TOPLEFT")
-		end
-		prevAura = aura
-	end
-end)
-
 hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	if self:IsForbidden() then return end
 
