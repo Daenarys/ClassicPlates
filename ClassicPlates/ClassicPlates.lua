@@ -44,6 +44,7 @@ hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	if self.Cooldown then
 		self.Cooldown:SetEdgeTexture("Interface\\Cooldown\\edge")
 		self.Cooldown:SetHideCountdownNumbers(true)
+		self.Cooldown:SetPoint("CENTER", 0, -1)
 	end
 
 	if self.CountFrame then
