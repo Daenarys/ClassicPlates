@@ -78,6 +78,8 @@ hooksecurefunc(NamePlateClassificationFrameMixin, "UpdateClassificationIndicator
 end)
 
 hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
+	if self:IsForbidden() then return end
+
 	self.castBar:ClearAllPoints()
 	self.ClassificationFrame:ClearAllPoints()
 	if ClassicPlatesDB.largerPlates then
