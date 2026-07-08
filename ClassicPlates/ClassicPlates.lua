@@ -30,7 +30,7 @@ end
 hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	if self:IsForbidden() then return end
 
-	self:SetSize(32, 22)
+	self:SetSize(38, 26)
 
 	select(2, self:GetRegions()):Hide()
 	select(3, self:GetRegions()):Hide()
@@ -48,13 +48,11 @@ hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	end
 
 	if self.CountFrame then
-		self.CountFrame.Count:SetScale(1.6)
-		self.CountFrame.Count:ClearAllPoints()
-		self.CountFrame.Count:SetPoint("BOTTOMRIGHT", 2, -1)
+		self.CountFrame.Count:SetScale(1.8)
 	end
 
 	if self.Icon then
-		self.Icon:SetSize(30, 20)
+		self.Icon:SetSize(34, 22)
 		self.Icon:ClearAllPoints()
 		self.Icon:SetPoint("CENTER")
 		self.Icon:SetTexCoord(0.05, 0.95, 0.1, 0.6)
@@ -120,10 +118,11 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 		self.AurasFrame.BuffListFrame:SetAlpha(0)
 	end
 	if self.AurasFrame.DebuffListFrame then
+		self.AurasFrame.DebuffListFrame:SetPoint("LEFT", self.HealthBarsContainer, "LEFT", -2, 0)
 		if self.HealthBarsContainer.healthBar:IsTarget() or self.name:IsShown() then
 			self.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", self.name, "TOP", 0, 15)
 		else
-			self.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", self.name, "TOP", 0, -15)
+			self.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", self.name, "TOP", 0, -18)
 		end
 	end
 end)
