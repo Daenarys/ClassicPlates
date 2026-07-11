@@ -30,7 +30,7 @@ end
 hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	if self:IsForbidden() then return end
 
-	self:SetSize(38, 26)
+	self:SetSize(37, 25)
 
 	select(2, self:GetRegions()):Hide()
 	select(3, self:GetRegions()):Hide()
