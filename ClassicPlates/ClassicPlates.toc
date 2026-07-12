@@ -3,7 +3,7 @@
 ## Title: Classic Plates
 ## Notes: Restores the classic Nameplates
 ## Author: luckfore
-## Version: 1.33
+## Version: 1.34
 ## SavedVariables: ClassicPlatesDB, ClassicPlatesVersion
 config/defaults.lua
 config/options.lua
