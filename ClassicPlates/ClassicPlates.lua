@@ -58,6 +58,23 @@ hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	end
 end)
 
+hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self, listFrame)
+	if self:IsForbidden() then return end
+
+	if listFrame == self.DebuffListFrame then
+		local prevAura = nil
+		for aura in self.auraItemFramePool:EnumerateActive() do
+			aura:ClearAllPoints()
+			if prevAura then
+				aura:SetPoint("TOPLEFT", prevAura, "TOPLEFT", 42, 0)
+			else
+				aura:SetPoint("TOPLEFT", listFrame, "TOPLEFT")
+			end
+			prevAura = aura
+		end
+	end
+end)
+
 hooksecurefunc(NamePlateClassificationFrameMixin, "UpdateClassificationIndicator", function(self)
 	if self:IsForbidden() then return end
 
@@ -117,11 +134,12 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 		self.AurasFrame.BuffListFrame:SetAlpha(0)
 	end
 	if self.AurasFrame.DebuffListFrame then
+		self.AurasFrame.DebuffListFrame:ClearAllPoints()
 		self.AurasFrame.DebuffListFrame:SetPoint("LEFT", self.HealthBarsContainer, "LEFT", -2, 0)
 		if self.HealthBarsContainer.healthBar:IsTarget() or self.name:IsShown() then
 			self.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", self.name, "TOP", 0, 15)
 		else
-			self.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", self.name, "TOP", 0, -18)
+			self.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", self.name, "TOP", 0, -17)
 		end
 	end
 end)
