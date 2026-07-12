@@ -57,10 +57,13 @@ end)
 hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self, listFrame)
 	if self:IsForbidden() then return end
 
+	for aura in self.auraItemFramePool:EnumerateActive() do
+		aura:SetScale(1.4)
+	end
+
 	if listFrame == self.DebuffListFrame then
 		local items = {}
 		for aura in self.auraItemFramePool:EnumerateActive() do
-			aura:SetScale(1.4)
 			table.insert(items, aura)
 		end
 
