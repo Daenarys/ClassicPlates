@@ -112,18 +112,18 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 		PixelUtil.SetPoint(self.castBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
 		self.castBar.BorderShield:SetSize(16, 18)
 		self.castBar.Icon:SetSize(18, 18)
-		self.castBar.Text:SetTextHeight(14)
+		self.castBar.Text:SetTextHeight(16)
 		PixelUtil.SetHeight(self.HealthBarsContainer, 15)
 		self.name:SetFontObject("CpSystemFont_LargeNamePlate")
 		self.ClassificationFrame:SetPoint("RIGHT", self.HealthBarsContainer, "LEFT", -2, 0)
 	else
 		self.castBar:SetHeight(12)
-		PixelUtil.SetPoint(self.castBar, "BOTTOMLEFT", self, "BOTTOMLEFT", 26, 0)
-		PixelUtil.SetPoint(self.castBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -26, 0)
+		PixelUtil.SetPoint(self.castBar, "BOTTOMLEFT", self, "BOTTOMLEFT", 28, 0)
+		PixelUtil.SetPoint(self.castBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -28, 0)
 		self.castBar.BorderShield:SetSize(10, 12)
 		self.castBar.Icon:SetSize(14, 14)
 		self.castBar.Text:SetTextHeight(12)
-		PixelUtil.SetHeight(self.HealthBarsContainer, 6)
+		PixelUtil.SetHeight(self.HealthBarsContainer, 5)
 		self.name:SetFontObject("CpSystemFont_NamePlate")
 		self.ClassificationFrame:SetPoint("RIGHT", self.HealthBarsContainer, "LEFT")
 	end
@@ -171,13 +171,70 @@ hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
 	end
 end)
 
+local castbarColors = {}
+castbarColors.Standard = CreateColor(1.0, 0.7, 0.0, 1)
+castbarColors.Channel = CreateColor(0.0, 1.0, 0.0, 1)
+castbarColors.Uninterruptable = CreateColor(0.7, 0.7, 0.7, 1)
+castbarColors.Interrupted = CreateColor(1, 0, 0, 1)
+
 local function SkinCastbar(self)
 	if self:IsForbidden() then return end
 
+	if self.Background then
+		self.Background:SetColorTexture(0.2, 0.2, 0.2, 0.85)
+	end
+
+	hooksecurefunc(self, 'UpdateShownState', function()
+		self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+		self.Spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
+		self.Spark:SetSize(16, 16)
+		self.Spark:SetBlendMode("ADD")
+		if self.channeling then
+			self.Spark:Hide()
+		end
+		local FadeOutAnim = self.FadeOutAnim:CreateAnimation("Alpha") 
+		FadeOutAnim:SetDuration(0.2)
+		FadeOutAnim:SetFromAlpha(1)
+		FadeOutAnim:SetToAlpha(0)
+	end)
+
+	hooksecurefunc(self, 'PlayInterruptAnims', function()
+		self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+		self:GetStatusBarTexture():SetVertexColor(castbarColors.Interrupted:GetRGBA())
+		self:SetValue(self.maxValue)
+		self.Spark:Hide()
+	end)
+
+	hooksecurefunc(self, 'PlayFinishAnim', function()
+		self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+		self.Flash:SetTexture("Interface\\TargetingFrame\\UI-StatusBar")
+		self.Flash:SetVertexColor(self:GetStatusBarColor())
+		self.Flash:ClearAllPoints()
+		self.Flash:SetAllPoints()
+		if not self.NewFlash then
+			self.NewFlash = self.Flash:CreateAnimationGroup()
+			self.NewFlash:SetToFinalAlpha(true)
+			local FlashAnim = self.NewFlash:CreateAnimation("Alpha") 
+			FlashAnim:SetDuration(0.2)
+			FlashAnim:SetFromAlpha(1)
+			FlashAnim:SetToAlpha(0)
+		end
+		self.NewFlash:Play()
+	end)
+
+	hooksecurefunc(self, 'GetTypeInfo', function()
+		if UnitCastingInfo(self.unit) then
+			local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo(self.unit)
+			self:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Standard)
+		elseif UnitChannelInfo(self.unit) then
+			local _, _, _, _, _, _, notInterruptible = UnitChannelInfo(self.unit)
+			self:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Channel)
+		end
+	end)
+
 	if self.Text then
 		self.Text:ClearAllPoints()
-		self.Text:SetPoint("TOPLEFT")
-		self.Text:SetPoint("BOTTOMRIGHT")
+		self.Text:SetAllPoints()
 	end
 
 	hooksecurefunc(self, 'HandleInterruptOrSpellFailed', function(_, event)
@@ -223,18 +280,18 @@ local function SkinHealthBar(frame)
 	frame.healthBar.border:UpdateSizes()
 
 	if isTarget then
-		frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
+		frame.healthBar.border:SetVertexColor(1, 1, 1, 0.55)
 	else
-		frame.healthBar.border:SetVertexColor(0, 0, 0, 1)
+		frame.healthBar.border:SetVertexColor(0, 0, 0, 0.8)
 	end
 
 	hooksecurefunc(frame.healthBar, "UpdateSelectionBorder", function()
 		local isTarget = frame.healthBar:IsTarget()
 
 		if isTarget then
-			frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
+			frame.healthBar.border:SetVertexColor(1, 1, 1, 0.55)
 		else
-			frame.healthBar.border:SetVertexColor(0, 0, 0, 1)
+			frame.healthBar.border:SetVertexColor(0, 0, 0, 0.8)
 		end
 	end)
 end
@@ -269,9 +326,12 @@ local function HandleNamePlateAdded(unit)
 end
 
 local f = CreateFrame("Frame")
+f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 f:SetScript("OnEvent", function(self, event, unit)
-	if event == "NAME_PLATE_UNIT_ADDED" then
+	if event == "ADDON_LOADED" then
+		SetCVar("nameplateSelectedScale", 1.0)
+	elseif event == "NAME_PLATE_UNIT_ADDED" then
 		HandleNamePlateAdded(unit)
 	end
 end)
