@@ -54,33 +54,28 @@ hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	end
 end)
 
-hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self, listFrame)
+hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
 	if self:IsForbidden() then return end
 
+	local items = {}
 	for aura in self.auraItemFramePool:EnumerateActive() do
-		aura:SetScale(1.4)
+		table.insert(items, aura)
 	end
 
-	if listFrame == self.DebuffListFrame then
-		local items = {}
-		for aura in self.auraItemFramePool:EnumerateActive() do
-			table.insert(items, aura)
-		end
+	table.sort(items, function(a, b) 
+		return (a.layoutIndex or 0) < (b.layoutIndex or 0) 
+	end)
 
-		table.sort(items, function(a, b) 
-			return (a.layoutIndex or 0) < (b.layoutIndex or 0) 
-		end)
-
-		local prevAura = nil
-		for _, aura in ipairs(items) do
-			aura:ClearAllPoints()
-			if prevAura then
-				aura:SetPoint("TOPLEFT", prevAura, "TOPLEFT", 24, 0)
-			else
-				aura:SetPoint("TOPLEFT", listFrame, "TOPLEFT")
-			end
-			prevAura = aura
+	local prevAura = nil
+	for _, aura in ipairs(items) do
+		aura:SetScale(1.4)
+		aura:ClearAllPoints()
+		if prevAura then
+			aura:SetPoint("TOPLEFT", prevAura, "TOPLEFT", 24, 0)
+		else
+			aura:SetPoint("TOPLEFT", self, "TOPLEFT")
 		end
+		prevAura = aura
 	end
 end)
 
@@ -141,16 +136,14 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 	self.name:SetJustifyH("CENTER")
 	self.name:ClearAllPoints()
 	PixelUtil.SetPoint(self.name, "BOTTOM", self.HealthBarsContainer, "TOP", 0, 4)
-	if self.AurasFrame.BuffListFrame then
-		self.AurasFrame.BuffListFrame:SetAlpha(0)
-	end
-	if self.AurasFrame.DebuffListFrame then
-		self.AurasFrame.DebuffListFrame:ClearAllPoints()
-		self.AurasFrame.DebuffListFrame:SetPoint("LEFT", self.HealthBarsContainer, "LEFT", -2, 0)
+	if self.AurasFrame then
+		self.AurasFrame:SetSize(88, 14)
+		self.AurasFrame:ClearAllPoints()
+		self.AurasFrame:SetPoint("LEFT", self.HealthBarsContainer, "LEFT", -1, 0)
 		if self.HealthBarsContainer.healthBar:IsTarget() or self.name:IsShown() then
-			self.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", self.name, "TOP", 0, 24)
+			self.AurasFrame:SetPoint("BOTTOM", self, "TOP", 0, 8)
 		else
-			self.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", self.name, "TOP", 0, -9)
+			self.AurasFrame:SetPoint("BOTTOM", self.HealthBarsContainer, "TOP", 0, 10)
 		end
 	end
 end)
