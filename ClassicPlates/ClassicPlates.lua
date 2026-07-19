@@ -54,20 +54,41 @@ hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	end
 end)
 
-hooksecurefunc(NamePlateAurasMixin, "RefreshList", function(self)
+hooksecurefunc(NamePlateAurasMixin, "RefreshAuras", function(self)
 	if self:IsForbidden() then return end
 
-	local items = {}
+	local debuffs = {}
+	local ccs = {}
+
 	for aura in self.auraItemFramePool:EnumerateActive() do
-		table.insert(items, aura)
+		local parent = aura:GetParent()
+		if parent == self.DebuffListFrame then
+			table.insert(debuffs, aura)
+		elseif parent == self.CrowdControlListFrame then
+			table.insert(ccs, aura)
+		end
 	end
 
-	table.sort(items, function(a, b) 
-		return (a.layoutIndex or 0) < (b.layoutIndex or 0) 
-	end)
+	local function sortByIndex(a, b)
+		return (a.layoutIndex or 0) < (b.layoutIndex or 0)
+	end
+
+	table.sort(debuffs, sortByIndex)
+	table.sort(ccs, sortByIndex)
 
 	local prevAura = nil
-	for _, aura in ipairs(items) do
+	for _, aura in ipairs(debuffs) do
+		aura:SetScale(1.4)
+		aura:ClearAllPoints()
+		if prevAura then
+			aura:SetPoint("TOPLEFT", prevAura, "TOPLEFT", 24, 0)
+		else
+			aura:SetPoint("TOPLEFT", self, "TOPLEFT")
+		end
+		prevAura = aura
+	end
+
+	for _, aura in ipairs(ccs) do
 		aura:SetScale(1.4)
 		aura:ClearAllPoints()
 		if prevAura then
@@ -145,6 +166,9 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 		else
 			self.AurasFrame:SetPoint("BOTTOM", self.HealthBarsContainer, "TOP", 0, 10)
 		end
+	end
+	if self.AurasFrame.BuffListFrame then
+		self.AurasFrame.BuffListFrame:SetAlpha(0)
 	end
 end)
 
