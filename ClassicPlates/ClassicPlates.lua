@@ -304,9 +304,9 @@ local function HandleNamePlateAdded(unit)
 			frame.castBar.BorderShield:SetSize(16, 18)
 			frame.castBar.Icon:SetSize(18, 18)
 			frame.castBar.Text:SetTextHeight(16)
+			frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -2, 0)
 			PixelUtil.SetHeight(frame.HealthBarsContainer, 15)
 			frame.name:SetFontObject("CpSystemFont_LargeNamePlate")
-			frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -2, 0)
 		else
 			frame.castBar:SetHeight(12)
 			PixelUtil.SetPoint(frame.castBar, "BOTTOMLEFT", frame, "BOTTOMLEFT", 26, 0)
@@ -314,9 +314,9 @@ local function HandleNamePlateAdded(unit)
 			frame.castBar.BorderShield:SetSize(12, 14)
 			frame.castBar.Icon:SetSize(14, 14)
 			frame.castBar.Text:SetTextHeight(12)
+			frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT")
 			PixelUtil.SetHeight(frame.HealthBarsContainer, 5)
 			frame.name:SetFontObject("CpSystemFont_NamePlate")
-			frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT")
 		end
 		frame.castBar.BorderShield:ClearAllPoints()
 		PixelUtil.SetPoint(frame.castBar.BorderShield, "CENTER", frame.castBar, "LEFT", 0, 0)
@@ -338,7 +338,11 @@ local function HandleNamePlateAdded(unit)
 			frame.AurasFrame:ClearAllPoints()
 			frame.AurasFrame:SetPoint("LEFT", frame.HealthBarsContainer, "LEFT", -1, 0)
 			if frame.HealthBarsContainer.healthBar:IsTarget() or frame.name:IsShown() then
-				frame.AurasFrame:SetPoint("BOTTOM", frame, "TOP")
+				if ClassicPlatesDB.largerPlates then
+					frame.AurasFrame:SetPoint("BOTTOM", frame, "TOP", 0, 20)
+				else
+					frame.AurasFrame:SetPoint("BOTTOM", frame, "TOP")
+				end
 			else
 				frame.AurasFrame:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP", 0, 5)
 			end
