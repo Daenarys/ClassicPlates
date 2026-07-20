@@ -309,8 +309,8 @@ local function HandleNamePlateAdded(unit)
 			frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -2, 0)
 		else
 			frame.castBar:SetHeight(12)
-			PixelUtil.SetPoint(frame.castBar, "BOTTOMLEFT", frame, "BOTTOMLEFT", 28, 0)
-			PixelUtil.SetPoint(frame.castBar, "BOTTOMRIGHT", frame, "BOTTOMRIGHT", -28, 0)
+			PixelUtil.SetPoint(frame.castBar, "BOTTOMLEFT", frame, "BOTTOMLEFT", 26, 0)
+			PixelUtil.SetPoint(frame.castBar, "BOTTOMRIGHT", frame, "BOTTOMRIGHT", -26, 0)
 			frame.castBar.BorderShield:SetSize(12, 14)
 			frame.castBar.Icon:SetSize(14, 14)
 			frame.castBar.Text:SetTextHeight(12)
@@ -357,7 +357,7 @@ f:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 f:SetScript("OnEvent", function(self, event, unit)
 	if event == "PLAYER_LOGIN" then
 		if C_CVar.GetCVar("nameplateSelectedScale") ~= "1" then
-			C_CVar.SetCVar("nameplateSelectedScale", 1.0)
+			C_CVar.SetCVar("nameplateSelectedScale", 1)
 		end
 	elseif event == "NAME_PLATE_UNIT_ADDED" then
 		HandleNamePlateAdded(unit)
