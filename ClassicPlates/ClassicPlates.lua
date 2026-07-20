@@ -27,6 +27,15 @@ function Addon:UpdateVersion()
 	print("|cff33ff99Classic Plates|r: Updated to v" .. ClassicPlatesVersion)
 end
 
+CpNamePlateBorderTemplateMixin = {}
+
+function CpNamePlateBorderTemplateMixin:SetVertexColor(r, g, b, a)
+	a = a / self.numLayers
+	for i, texture in ipairs(self.Textures) do
+		texture:SetVertexColor(r, g, b, a)
+	end
+end
+
 hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	if self:IsForbidden() then return end
 
@@ -240,8 +249,7 @@ local function SkinHealthBar(frame)
 	frame.healthBar.background:SetAllPoints(frame.healthBar)
 	frame.healthBar.background:SetColorTexture(0.2, 0.2, 0.2, 0.85)
 
-	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "NamePlateFullBorderTemplate")
-	frame.healthBar.border:UpdateSizes()
+	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "CpNamePlateFullBorderTemplate")
 
 	if isTarget then
 		frame.healthBar.border:SetVertexColor(1, 1, 1, 0.55)
