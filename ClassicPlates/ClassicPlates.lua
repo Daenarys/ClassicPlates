@@ -27,6 +27,15 @@ function Addon:UpdateVersion()
 	print("|cff33ff99Classic Plates|r: Updated to v" .. ClassicPlatesVersion)
 end
 
+CpNamePlateBorderTemplateMixin = {}
+
+function CpNamePlateBorderTemplateMixin:SetVertexColor(r, g, b, a)
+	a = a / self.numLayers
+	for i, texture in ipairs(self.Textures) do
+		texture:SetVertexColor(r, g, b, a)
+	end
+end
+
 hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	if self:IsForbidden() then return end
 
@@ -240,22 +249,21 @@ local function SkinHealthBar(frame)
 	frame.healthBar.background:SetAllPoints(frame.healthBar)
 	frame.healthBar.background:SetColorTexture(0.2, 0.2, 0.2, 0.85)
 
-	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "NamePlateFullBorderTemplate")
-	frame.healthBar.border:UpdateSizes()
+	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "CpNamePlateFullBorderTemplate")
 
 	if isTarget then
-		frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
+		frame.healthBar.border:SetVertexColor(1, 1, 1, 0.55)
 	else
-		frame.healthBar.border:SetVertexColor(0, 0, 0, 1)
+		frame.healthBar.border:SetVertexColor(0, 0, 0, 0.8)
 	end
 
 	hooksecurefunc(frame.healthBar, "UpdateSelectionBorder", function()
 		local isTarget = frame.healthBar:IsTarget()
 
 		if isTarget then
-			frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
+			frame.healthBar.border:SetVertexColor(1, 1, 1, 0.55)
 		else
-			frame.healthBar.border:SetVertexColor(0, 0, 0, 1)
+			frame.healthBar.border:SetVertexColor(0, 0, 0, 0.8)
 		end
 	end)
 end
@@ -301,8 +309,8 @@ local function HandleNamePlateAdded(unit)
 			frame.name:SetFontObject("CpSystemFont_LargeNamePlate")
 		else
 			frame.castBar:SetHeight(12)
-			PixelUtil.SetPoint(frame.castBar, "BOTTOMLEFT", frame, "BOTTOMLEFT", 26, 0)
-			PixelUtil.SetPoint(frame.castBar, "BOTTOMRIGHT", frame, "BOTTOMRIGHT", -26, 0)
+			PixelUtil.SetPoint(frame.castBar, "BOTTOMLEFT", frame, "BOTTOMLEFT", 28, 0)
+			PixelUtil.SetPoint(frame.castBar, "BOTTOMRIGHT", frame, "BOTTOMRIGHT", -28, 0)
 			frame.castBar.BorderShield:SetSize(12, 14)
 			frame.castBar.Icon:SetSize(14, 14)
 			frame.castBar.Text:SetTextHeight(12)
@@ -348,9 +356,14 @@ local function HandleNamePlateAdded(unit)
 end
 
 local f = CreateFrame("Frame")
+f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 f:SetScript("OnEvent", function(self, event, unit)
-	if event == "NAME_PLATE_UNIT_ADDED" then
+	if event == "PLAYER_LOGIN" then
+		if C_CVar.GetCVar("nameplateSelectedScale") ~= "1" then
+			C_CVar.SetCVar("nameplateSelectedScale", 1)
+		end
+	elseif event == "NAME_PLATE_UNIT_ADDED" then
 		HandleNamePlateAdded(unit)
 	end
 end)
