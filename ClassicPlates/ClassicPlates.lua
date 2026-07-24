@@ -27,15 +27,6 @@ function Addon:UpdateVersion()
 	print("|cff33ff99Classic Plates|r: Updated to v" .. ClassicPlatesVersion)
 end
 
-CpNamePlateBorderTemplateMixin = {}
-
-function CpNamePlateBorderTemplateMixin:SetVertexColor(r, g, b, a)
-	a = a / self.numLayers
-	for i, texture in ipairs(self.Textures) do
-		texture:SetVertexColor(r, g, b, a)
-	end
-end
-
 hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	if self:IsForbidden() then return end
 
@@ -249,21 +240,22 @@ local function SkinHealthBar(frame)
 	frame.healthBar.background:SetAllPoints(frame.healthBar)
 	frame.healthBar.background:SetColorTexture(0.2, 0.2, 0.2, 0.85)
 
-	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "CpNamePlateFullBorderTemplate")
+	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "NamePlateFullBorderTemplate")
+	frame.healthBar.border:UpdateSizes()
 
 	if isTarget then
-		frame.healthBar.border:SetVertexColor(1, 1, 1, 0.55)
+		frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
 	else
-		frame.healthBar.border:SetVertexColor(0, 0, 0, 0.8)
+		frame.healthBar.border:SetVertexColor(0, 0, 0, 1)
 	end
 
 	hooksecurefunc(frame.healthBar, "UpdateSelectionBorder", function()
 		local isTarget = frame.healthBar:IsTarget()
 
 		if isTarget then
-			frame.healthBar.border:SetVertexColor(1, 1, 1, 0.55)
+			frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
 		else
-			frame.healthBar.border:SetVertexColor(0, 0, 0, 0.8)
+			frame.healthBar.border:SetVertexColor(0, 0, 0, 1)
 		end
 	end)
 end
@@ -360,8 +352,8 @@ f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 f:SetScript("OnEvent", function(self, event, unit)
 	if event == "PLAYER_LOGIN" then
-		if C_CVar.GetCVar("nameplateSelectedScale") ~= "1" then
-			C_CVar.SetCVar("nameplateSelectedScale", 1)
+		if C_CVar.GetCVar("nameplateSelectedScale") ~= "1.2" then
+			C_CVar.SetCVar("nameplateSelectedScale", 1.2)
 		end
 	elseif event == "NAME_PLATE_UNIT_ADDED" then
 		HandleNamePlateAdded(unit)
