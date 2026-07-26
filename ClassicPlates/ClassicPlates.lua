@@ -1,5 +1,5 @@
 local AddonName, Addon = ...
-local CURRENT_VERSION = C_AddOns.GetAddOnMetadata(AddonName, 'Version')
+local CURRENT_VERSION = C_AddOns.GetAddOnMetadata(AddonName, "Version")
 
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("ADDON_LOADED")
@@ -157,8 +157,8 @@ local function SkinCastbar(self)
 		self.Background:SetColorTexture(0.2, 0.2, 0.2, 0.85)
 	end
 
-	hooksecurefunc(self, 'UpdateShownState', function()
-		self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+	hooksecurefunc(self, "UpdateShownState", function()
+		self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
 		self.Spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
 		self.Spark:SetSize(16, 16)
 		self.Spark:SetBlendMode("ADD")
@@ -171,16 +171,16 @@ local function SkinCastbar(self)
 		FadeOutAnim:SetToAlpha(0)
 	end)
 
-	hooksecurefunc(self, 'PlayInterruptAnims', function()
-		self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+	hooksecurefunc(self, "PlayInterruptAnims", function()
+		self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
 		self:GetStatusBarTexture():SetVertexColor(castbarColors.Interrupted:GetRGBA())
 		self:SetValue(self.maxValue)
 		self.Spark:Hide()
 	end)
 
-	hooksecurefunc(self, 'PlayFinishAnim', function()
-		self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
-		self.Flash:SetTexture("Interface\\TargetingFrame\\UI-StatusBar")
+	hooksecurefunc(self, "PlayFinishAnim", function()
+		self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
+		self.Flash:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
 		self.Flash:SetVertexColor(self:GetStatusBarColor())
 		self.Flash:ClearAllPoints()
 		self.Flash:SetAllPoints()
@@ -195,7 +195,7 @@ local function SkinCastbar(self)
 		self.NewFlash:Play()
 	end)
 
-	hooksecurefunc(self, 'GetTypeInfo', function()
+	hooksecurefunc(self, "GetTypeInfo", function()
 		if UnitCastingInfo(self.unit) then
 			local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo(self.unit)
 			self:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Standard)
@@ -210,7 +210,7 @@ local function SkinCastbar(self)
 		self.Text:SetAllPoints()
 	end
 
-	hooksecurefunc(self, 'HandleInterruptOrSpellFailed', function(_, event)
+	hooksecurefunc(self, "HandleInterruptOrSpellFailed", function(_, event)
 		if ( self.Text ) then
 			if ( event == "UNIT_SPELLCAST_FAILED" ) then
 				self.Text:SetText(FAILED)
@@ -220,13 +220,13 @@ local function SkinCastbar(self)
 		end
 	end)
 
-	hooksecurefunc(self, 'SetIsHighlightedCastTarget', function()
+	hooksecurefunc(self, "SetIsHighlightedCastTarget", function()
 		if self.CastTargetIndicator then
 			self.CastTargetIndicator:Hide()
 		end
 	end)
 
-	hooksecurefunc(self, 'SetIsHighlightedImportantCast', function()
+	hooksecurefunc(self, "SetIsHighlightedImportantCast", function()
 		if self.ImportantCastIndicator then
 			self.ImportantCastIndicator:Hide()
 		end
