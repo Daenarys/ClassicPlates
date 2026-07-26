@@ -325,9 +325,6 @@ local function HandleNamePlateAdded(unit)
 		frame.ClassificationFrame:SetScale(1.4)
 		frame.ClassificationFrame:SetSize(14, 13)
 		frame.ClassificationFrame.classificationIndicator:SetSize(14, 13)
-		frame.HealthBarsContainer:ClearAllPoints()
-		PixelUtil.SetPoint(frame.HealthBarsContainer, "BOTTOMLEFT", frame.castBar, "TOPLEFT", 0, 2.5)
-		PixelUtil.SetPoint(frame.HealthBarsContainer, "BOTTOMRIGHT", frame.castBar, "TOPRIGHT", 0, 2.5)
 		frame.name:SetIgnoreParentScale(true)
 		frame.name:SetJustifyH("CENTER")
 		frame.name:ClearAllPoints()
@@ -346,8 +343,6 @@ local function HandleNamePlateAdded(unit)
 			else
 				frame.AurasFrame:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP", 0, 5)
 			end
-		end
-		if frame.AurasFrame.BuffListFrame then
 			frame.AurasFrame.BuffListFrame:SetAlpha(0)
 		end
 	end)
