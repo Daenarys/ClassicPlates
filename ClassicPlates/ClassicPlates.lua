@@ -160,7 +160,7 @@ local function SkinCastbar(self)
 	hooksecurefunc(self, "UpdateShownState", function()
 		self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
 		self.Spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
-		self.Spark:SetSize(16, 16)
+		self.Spark:SetSize(20, 20)
 		self.Spark:SetBlendMode("ADD")
 		if self.channeling then
 			self.Spark:Hide()
