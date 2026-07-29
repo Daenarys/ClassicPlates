@@ -123,6 +123,7 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 		self.AurasFrame.BuffListFrame:SetAlpha(0)
 	end
 	if self.AurasFrame.DebuffListFrame then
+		self.AurasFrame.DebuffListFrame:SetPoint("LEFT", self.HealthBarsContainer, "LEFT", -1, 0)
 		if self.HealthBarsContainer.healthBar:IsTarget() or self.name:IsShown() then
 			self.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", self.name, "TOP", 0, 10)
 		else
