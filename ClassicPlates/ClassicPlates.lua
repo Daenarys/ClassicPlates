@@ -57,6 +57,8 @@ end)
 hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	if self:IsForbidden() then return end
 
+	self:SetSize(35, 35)
+
 	if self.Cooldown then
 		self.Cooldown:SetEdgeTexture("Interface\\Cooldown\\edge")
 		self.Cooldown:SetHideCountdownNumbers(true)
