@@ -36,76 +36,30 @@ function CpNamePlateBorderTemplateMixin:SetVertexColor(r, g, b, a)
 	end
 end
 
+hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
+	if not frame or frame:IsForbidden() or not frame.unit then return end
+	-- Further processing only for nameplate units
+	if not frame.unit:find("nameplate") then return end
+
+	if ( CompactUnitFrame_IsTapDenied(frame) or (UnitIsDead(frame.unit) and not UnitIsPlayer(frame.unit)) ) then
+		frame.name:SetVertexColor(0.5, 0.5, 0.5)
+	elseif not ( frame.optionTable.colorNameBySelection ) then
+		if ( frame.optionTable.considerSelectionInCombatAsHostile and CompactUnitFrame_IsOnThreatListWithPlayer(frame.displayedUnit) and not UnitIsFriend("player", frame.unit)  ) then
+			frame.name:SetVertexColor(1.0, 0.0, 0.0)
+		else
+			frame.name:SetVertexColor(UnitSelectionColor(frame.unit, frame.optionTable.colorNameWithExtendedColors))
+		end
+	else
+		frame.name:SetVertexColor(1.0, 1.0, 1.0)
+	end
+end)
+
 hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	if self:IsForbidden() then return end
-
-	self:SetSize(20, 14)
-
-	select(2, self:GetRegions()):Hide()
-	select(3, self:GetRegions()):Hide()
-
-	if not self.Border then
-		self.Border = self:CreateTexture(nil, "BACKGROUND")
-		self.Border:SetColorTexture(0, 0, 0)
-		self.Border:SetAllPoints()
-	end
 
 	if self.Cooldown then
 		self.Cooldown:SetEdgeTexture("Interface\\Cooldown\\edge")
 		self.Cooldown:SetHideCountdownNumbers(true)
-	end
-
-	if self.Icon then
-		self.Icon:SetSize(18, 12)
-		self.Icon:ClearAllPoints()
-		self.Icon:SetPoint("CENTER")
-		self.Icon:SetTexCoord(0.05, 0.95, 0.1, 0.6)
-	end
-end)
-
-hooksecurefunc(NamePlateAurasMixin, "RefreshAuras", function(self)
-	if self:IsForbidden() then return end
-
-	local debuffs = {}
-	local ccs = {}
-
-	for aura in self.auraItemFramePool:EnumerateActive() do
-		local parent = aura:GetParent()
-		if parent == self.DebuffListFrame then
-			table.insert(debuffs, aura)
-		elseif parent == self.CrowdControlListFrame then
-			table.insert(ccs, aura)
-		end
-	end
-
-	local function sortByIndex(a, b)
-		return (a.layoutIndex or 0) < (b.layoutIndex or 0)
-	end
-
-	table.sort(debuffs, sortByIndex)
-	table.sort(ccs, sortByIndex)
-
-	local prevAura = nil
-	for _, aura in ipairs(debuffs) do
-		aura:SetScale(1)
-		aura:ClearAllPoints()
-		if prevAura then
-			aura:SetPoint("TOPLEFT", prevAura, "TOPLEFT", 24, 0)
-		else
-			aura:SetPoint("TOPLEFT", self, "TOPLEFT")
-		end
-		prevAura = aura
-	end
-
-	for _, aura in ipairs(ccs) do
-		aura:SetScale(1)
-		aura:ClearAllPoints()
-		if prevAura then
-			aura:SetPoint("TOPLEFT", prevAura, "TOPLEFT", 24, 0)
-		else
-			aura:SetPoint("TOPLEFT", self, "TOPLEFT")
-		end
-		prevAura = aura
 	end
 end)
 
@@ -126,21 +80,52 @@ hooksecurefunc(NamePlateClassificationFrameMixin, "UpdateClassificationIndicator
 	end
 end)
 
-hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
-	if not frame or frame:IsForbidden() or not frame.unit then return end
-	-- Further processing only for nameplate units
-	if not frame.unit:find("nameplate") then return end
+hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
+	if self:IsForbidden() then return end
 
-	if ( CompactUnitFrame_IsTapDenied(frame) or (UnitIsDead(frame.unit) and not UnitIsPlayer(frame.unit)) ) then
-		frame.name:SetVertexColor(0.5, 0.5, 0.5)
-	elseif not ( frame.optionTable.colorNameBySelection ) then
-		if ( frame.optionTable.considerSelectionInCombatAsHostile and CompactUnitFrame_IsOnThreatListWithPlayer(frame.displayedUnit) and not UnitIsFriend("player", frame.unit)  ) then
-			frame.name:SetVertexColor(1.0, 0.0, 0.0)
-		else
-			frame.name:SetVertexColor(UnitSelectionColor(frame.unit, frame.optionTable.colorNameWithExtendedColors))
-		end
+	self.castBar:ClearAllPoints()
+	self.ClassificationFrame:ClearAllPoints()
+	if ClassicPlatesDB.largerPlates then
+		self.castBar:SetHeight(22)
+		PixelUtil.SetPoint(self.castBar, "BOTTOMLEFT", self, "BOTTOMLEFT", 0, 0)
+		PixelUtil.SetPoint(self.castBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
+		self.castBar.BorderShield:SetSize(16, 18)
+		self.castBar.Icon:SetSize(18, 18)
+		self.castBar.Text:SetTextHeight(16)
+		self.ClassificationFrame:SetPoint("RIGHT", self.HealthBarsContainer, "LEFT", -2, 0)
+		PixelUtil.SetHeight(self.HealthBarsContainer, 15)
+		self.name:SetFontObject("CpSystemFont_LargeNamePlate")
 	else
-		frame.name:SetVertexColor(1.0, 1.0, 1.0)
+		self.castBar:SetHeight(12)
+		PixelUtil.SetPoint(self.castBar, "BOTTOMLEFT", self, "BOTTOMLEFT", 28, 0)
+		PixelUtil.SetPoint(self.castBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -28, 0)
+		self.castBar.BorderShield:SetSize(12, 14)
+		self.castBar.Icon:SetSize(14, 14)
+		self.castBar.Text:SetTextHeight(11)
+		self.ClassificationFrame:SetPoint("RIGHT", self.HealthBarsContainer, "LEFT")
+		PixelUtil.SetHeight(self.HealthBarsContainer, 5)
+		self.name:SetFontObject("CpSystemFont_NamePlate")
+	end
+	self.castBar.BorderShield:ClearAllPoints()
+	PixelUtil.SetPoint(self.castBar.BorderShield, "CENTER", self.castBar, "LEFT", 0, 0)
+	self.castBar.Icon:ClearAllPoints()
+	PixelUtil.SetPoint(self.castBar.Icon, "CENTER", self.castBar, "LEFT", 0, 0)
+	self.ClassificationFrame:SetScale(1.4)
+	self.ClassificationFrame:SetSize(14, 13)
+	self.ClassificationFrame.classificationIndicator:SetSize(14, 13)
+	self.name:SetIgnoreParentScale(true)
+	self.name:SetJustifyH("CENTER")
+	self.name:ClearAllPoints()
+	PixelUtil.SetPoint(self.name, "BOTTOM", self.HealthBarsContainer, "TOP", 0, 4)
+	if self.AurasFrame.BuffListFrame then
+		self.AurasFrame.BuffListFrame:SetAlpha(0)
+	end
+	if self.AurasFrame.DebuffListFrame then
+		if self.HealthBarsContainer.healthBar:IsTarget() or self.name:IsShown() then
+			self.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", self.name, "TOP", 0, 10)
+		else
+			self.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", self.name, "TOP", 0, -18)
+		end
 	end
 end)
 
@@ -293,59 +278,6 @@ local function HandleNamePlateAdded(unit)
 		frame.selectionHighlight:SetBlendMode("ADD")
 		frame.selectionHighlight:SetAllPoints(frame.HealthBarsContainer)
 	end
-
-	hooksecurefunc(frame, "UpdateAnchors", function()
-		frame.castBar:ClearAllPoints()
-		frame.ClassificationFrame:ClearAllPoints()
-		if ClassicPlatesDB.largerPlates then
-			frame.castBar:SetHeight(22)
-			PixelUtil.SetPoint(frame.castBar, "BOTTOMLEFT", frame, "BOTTOMLEFT", 0, 0)
-			PixelUtil.SetPoint(frame.castBar, "BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
-			frame.castBar.BorderShield:SetSize(16, 18)
-			frame.castBar.Icon:SetSize(18, 18)
-			frame.castBar.Text:SetTextHeight(16)
-			frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT", -2, 0)
-			PixelUtil.SetHeight(frame.HealthBarsContainer, 15)
-			frame.name:SetFontObject("CpSystemFont_LargeNamePlate")
-		else
-			frame.castBar:SetHeight(12)
-			PixelUtil.SetPoint(frame.castBar, "BOTTOMLEFT", frame, "BOTTOMLEFT", 28, 0)
-			PixelUtil.SetPoint(frame.castBar, "BOTTOMRIGHT", frame, "BOTTOMRIGHT", -28, 0)
-			frame.castBar.BorderShield:SetSize(12, 14)
-			frame.castBar.Icon:SetSize(14, 14)
-			frame.castBar.Text:SetTextHeight(11)
-			frame.ClassificationFrame:SetPoint("RIGHT", frame.HealthBarsContainer, "LEFT")
-			PixelUtil.SetHeight(frame.HealthBarsContainer, 5)
-			frame.name:SetFontObject("CpSystemFont_NamePlate")
-		end
-		frame.castBar.BorderShield:ClearAllPoints()
-		PixelUtil.SetPoint(frame.castBar.BorderShield, "CENTER", frame.castBar, "LEFT", 0, 0)
-		frame.castBar.Icon:ClearAllPoints()
-		PixelUtil.SetPoint(frame.castBar.Icon, "CENTER", frame.castBar, "LEFT", 0, 0)
-		frame.ClassificationFrame:SetScale(1.4)
-		frame.ClassificationFrame:SetSize(14, 13)
-		frame.ClassificationFrame.classificationIndicator:SetSize(14, 13)
-		frame.name:SetIgnoreParentScale(true)
-		frame.name:SetJustifyH("CENTER")
-		frame.name:ClearAllPoints()
-		PixelUtil.SetPoint(frame.name, "BOTTOM", frame.HealthBarsContainer, "TOP", 0, 4)
-		if frame.AurasFrame then
-			frame.AurasFrame:SetIgnoreParentScale(true)
-			frame.AurasFrame:SetSize(88, 14)
-			frame.AurasFrame:ClearAllPoints()
-			frame.AurasFrame:SetPoint("LEFT", frame.HealthBarsContainer, "LEFT", -1, 0)
-			if frame.HealthBarsContainer.healthBar:IsTarget() or frame.name:IsShown() then
-				if ClassicPlatesDB.largerPlates then
-					frame.AurasFrame:SetPoint("BOTTOM", frame, "TOP", 0, 20)
-				else
-					frame.AurasFrame:SetPoint("BOTTOM", frame, "TOP")
-				end
-			else
-				frame.AurasFrame:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP", 0, 5)
-			end
-			frame.AurasFrame.BuffListFrame:SetAlpha(0)
-		end
-	end)
 
 	frame.skinned = true
 end
