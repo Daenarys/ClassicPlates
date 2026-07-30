@@ -11,7 +11,6 @@ frame:SetScript("OnEvent", function()
 		end
 	end
 
-	--version update
 	if ClassicPlatesVersion then
 		if ClassicPlatesVersion ~= CURRENT_VERSION then
 			Addon:UpdateVersion()
@@ -29,7 +28,6 @@ end
 
 hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
 	if not frame or frame:IsForbidden() or not frame.unit then return end
-	-- Further processing only for nameplate units
 	if not frame.unit:find("nameplate") then return end
 
 	if ( CompactUnitFrame_IsTapDenied(frame) or (UnitIsDead(frame.unit) and not UnitIsPlayer(frame.unit)) ) then
@@ -48,73 +46,11 @@ end)
 hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	if self:IsForbidden() then return end
 
-	self:SetSize(20, 14)
-
-	select(2, self:GetRegions()):Hide()
-	select(3, self:GetRegions()):Hide()
-
-	if not self.Border then
-		self.Border = self:CreateTexture(nil, "BACKGROUND")
-		self.Border:SetColorTexture(0, 0, 0)
-		self.Border:SetAllPoints()
-	end
+	self:SetSize(35, 35)
 
 	if self.Cooldown then
 		self.Cooldown:SetEdgeTexture("Interface\\Cooldown\\edge")
 		self.Cooldown:SetHideCountdownNumbers(true)
-	end
-
-	if self.Icon then
-		self.Icon:SetSize(18, 12)
-		self.Icon:ClearAllPoints()
-		self.Icon:SetPoint("CENTER")
-		self.Icon:SetTexCoord(0.05, 0.95, 0.1, 0.6)
-	end
-end)
-
-hooksecurefunc(NamePlateAurasMixin, "RefreshAuras", function(self)
-	if self:IsForbidden() then return end
-
-	local debuffs = {}
-	local ccs = {}
-
-	for aura in self.auraItemFramePool:EnumerateActive() do
-		local parent = aura:GetParent()
-		if parent == self.DebuffListFrame then
-			table.insert(debuffs, aura)
-		elseif parent == self.CrowdControlListFrame then
-			table.insert(ccs, aura)
-		end
-	end
-
-	local function sortByIndex(a, b)
-		return (a.layoutIndex or 0) < (b.layoutIndex or 0)
-	end
-
-	table.sort(debuffs, sortByIndex)
-	table.sort(ccs, sortByIndex)
-
-	local prevAura = nil
-	for _, aura in ipairs(debuffs) do
-		aura:SetScale(1)
-		aura:ClearAllPoints()
-		if prevAura then
-			aura:SetPoint("TOPLEFT", prevAura, "TOPLEFT", 24, 0)
-		else
-			aura:SetPoint("TOPLEFT", self, "TOPLEFT")
-		end
-		prevAura = aura
-	end
-
-	for _, aura in ipairs(ccs) do
-		aura:SetScale(1)
-		aura:ClearAllPoints()
-		if prevAura then
-			aura:SetPoint("TOPLEFT", prevAura, "TOPLEFT", 24, 0)
-		else
-			aura:SetPoint("TOPLEFT", self, "TOPLEFT")
-		end
-		prevAura = aura
 	end
 end)
 
@@ -152,13 +88,13 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 		self.name:SetFontObject("CpSystemFont_LargeNamePlate")
 	else
 		self.castBar:SetHeight(12)
-		PixelUtil.SetPoint(self.castBar, "BOTTOMLEFT", self, "BOTTOMLEFT", 26, 0)
-		PixelUtil.SetPoint(self.castBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -26, 0)
+		PixelUtil.SetPoint(self.castBar, "BOTTOMLEFT", self, "BOTTOMLEFT", 28, 0)
+		PixelUtil.SetPoint(self.castBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -28, 0)
 		self.castBar.BorderShield:SetSize(12, 14)
 		self.castBar.Icon:SetSize(14, 14)
-		self.castBar.Text:SetTextHeight(12)
+		self.castBar.Text:SetTextHeight(11)
 		self.ClassificationFrame:SetPoint("RIGHT", self.HealthBarsContainer, "LEFT")
-		PixelUtil.SetHeight(self.HealthBarsContainer, 6)
+		PixelUtil.SetHeight(self.HealthBarsContainer, 5)
 		self.name:SetFontObject("CpSystemFont_NamePlate")
 	end
 	self.castBar.BorderShield:ClearAllPoints()
@@ -172,21 +108,16 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 	self.name:SetJustifyH("CENTER")
 	self.name:ClearAllPoints()
 	PixelUtil.SetPoint(self.name, "BOTTOM", self.HealthBarsContainer, "TOP", 0, 4)
-	if self.AurasFrame then
-		self.AurasFrame:SetIgnoreParentScale(true)
-		self.AurasFrame:SetSize(88, 14)
-		self.AurasFrame:ClearAllPoints()
-		self.AurasFrame:SetPoint("LEFT", self.HealthBarsContainer, "LEFT", -1, 0)
-		if self.HealthBarsContainer.healthBar:IsTarget() or self.name:IsShown() then
-			if ClassicPlatesDB.largerPlates then
-				self.AurasFrame:SetPoint("BOTTOM", self, "TOP", 0, 20)
-			else
-				self.AurasFrame:SetPoint("BOTTOM", self, "TOP")
-			end
-		else
-			self.AurasFrame:SetPoint("BOTTOM", self.HealthBarsContainer, "TOP", 0, 5)
-		end
+	if self.AurasFrame.BuffListFrame then
 		self.AurasFrame.BuffListFrame:SetAlpha(0)
+	end
+	if self.AurasFrame.DebuffListFrame then
+		self.AurasFrame.DebuffListFrame:SetPoint("LEFT", self.HealthBarsContainer, "LEFT", -1, 0)
+		if self.HealthBarsContainer.healthBar:IsTarget() or self.name:IsShown() then
+			self.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", self.name, "TOP", 0, 10)
+		else
+			self.AurasFrame.DebuffListFrame:SetPoint("BOTTOM", self.name, "TOP", 0, -18)
+		end
 	end
 end)
 
@@ -345,9 +276,14 @@ local function HandleNamePlateAdded(unit)
 end
 
 local f = CreateFrame("Frame")
+f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 f:SetScript("OnEvent", function(self, event, unit)
-	if event == "NAME_PLATE_UNIT_ADDED" then
+	if event == "PLAYER_LOGIN" then
+		if C_CVar.GetCVar("nameplateSelectedScale") ~= "1" then
+			C_CVar.SetCVar("nameplateSelectedScale", 1)
+		end
+	elseif event == "NAME_PLATE_UNIT_ADDED" then
 		HandleNamePlateAdded(unit)
 	end
 end)
