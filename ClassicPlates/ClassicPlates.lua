@@ -27,6 +27,15 @@ function Addon:UpdateVersion()
 	print("|cff33ff99Classic Plates|r: Updated to v" .. ClassicPlatesVersion)
 end
 
+CpNamePlateBorderTemplateMixin = {}
+
+function CpNamePlateBorderTemplateMixin:SetVertexColor(r, g, b, a)
+	a = a / self.numLayers
+	for i, texture in ipairs(self.Textures) do
+		texture:SetVertexColor(r, g, b, a)
+	end
+end
+
 hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
 	if not frame or frame:IsForbidden() or not frame.unit then return end
 	-- Further processing only for nameplate units
@@ -152,8 +161,8 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 		self.name:SetFontObject("CpSystemFont_LargeNamePlate")
 	else
 		self.castBar:SetHeight(12)
-		PixelUtil.SetPoint(self.castBar, "BOTTOMLEFT", self, "BOTTOMLEFT", 26, 0)
-		PixelUtil.SetPoint(self.castBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -26, 0)
+		PixelUtil.SetPoint(self.castBar, "BOTTOMLEFT", self, "BOTTOMLEFT", 28, 0)
+		PixelUtil.SetPoint(self.castBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -28, 0)
 		self.castBar.BorderShield:SetSize(12, 14)
 		self.castBar.Icon:SetSize(14, 14)
 		self.castBar.Text:SetTextHeight(11)
@@ -295,22 +304,21 @@ local function SkinHealthBar(frame)
 	frame.healthBar.background:SetAllPoints(frame.healthBar)
 	frame.healthBar.background:SetColorTexture(0.2, 0.2, 0.2, 0.85)
 
-	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "NamePlateFullBorderTemplate")
-	frame.healthBar.border:UpdateSizes()
+	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "CpNamePlateFullBorderTemplate")
 
 	if isTarget then
-		frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
+		frame.healthBar.border:SetVertexColor(1, 1, 1, 0.55)
 	else
-		frame.healthBar.border:SetVertexColor(0, 0, 0, 1)
+		frame.healthBar.border:SetVertexColor(0, 0, 0, 0.8)
 	end
 
 	hooksecurefunc(frame.healthBar, "UpdateSelectionBorder", function()
 		local isTarget = frame.healthBar:IsTarget()
 
 		if isTarget then
-			frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
+			frame.healthBar.border:SetVertexColor(1, 1, 1, 0.55)
 		else
-			frame.healthBar.border:SetVertexColor(0, 0, 0, 1)
+			frame.healthBar.border:SetVertexColor(0, 0, 0, 0.8)
 		end
 	end)
 end
