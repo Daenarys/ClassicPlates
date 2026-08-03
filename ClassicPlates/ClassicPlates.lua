@@ -186,7 +186,7 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 				self.AurasFrame:SetPoint("BOTTOM", self, "TOP", 0, -3)
 			end
 		else
-			self.AurasFrame:SetPoint("BOTTOM", self.HealthBarsContainer, "TOP", 0, 2)
+			self.AurasFrame:SetPoint("BOTTOM", self.HealthBarsContainer, "TOP", 0, 3)
 		end
 		self.AurasFrame.BuffListFrame:SetAlpha(0)
 	end
