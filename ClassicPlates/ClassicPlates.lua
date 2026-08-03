@@ -27,15 +27,6 @@ function Addon:UpdateVersion()
 	print("|cff33ff99Classic Plates|r: Updated to v" .. ClassicPlatesVersion)
 end
 
-CpNamePlateBorderTemplateMixin = {}
-
-function CpNamePlateBorderTemplateMixin:SetVertexColor(r, g, b, a)
-	a = a / self.numLayers
-	for i, texture in ipairs(self.Textures) do
-		texture:SetVertexColor(r, g, b, a)
-	end
-end
-
 hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
 	if not frame or frame:IsForbidden() or not frame.unit then return end
 	-- Further processing only for nameplate units
@@ -105,7 +96,7 @@ hooksecurefunc(NamePlateAurasMixin, "RefreshAuras", function(self)
 
 	local prevAura = nil
 	for _, aura in ipairs(debuffs) do
-		aura:SetScale(1)
+		aura:SetScale(1.4)
 		aura:ClearAllPoints()
 		if prevAura then
 			aura:SetPoint("TOPLEFT", prevAura, "TOPLEFT", 24, 0)
@@ -116,7 +107,7 @@ hooksecurefunc(NamePlateAurasMixin, "RefreshAuras", function(self)
 	end
 
 	for _, aura in ipairs(ccs) do
-		aura:SetScale(1)
+		aura:SetScale(1.4)
 		aura:ClearAllPoints()
 		if prevAura then
 			aura:SetPoint("TOPLEFT", prevAura, "TOPLEFT", 24, 0)
@@ -167,7 +158,7 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 		self.castBar.Icon:SetSize(14, 14)
 		self.castBar.Text:SetTextHeight(11)
 		self.ClassificationFrame:SetPoint("RIGHT", self.HealthBarsContainer, "LEFT")
-		PixelUtil.SetHeight(self.HealthBarsContainer, 5)
+		PixelUtil.SetHeight(self.HealthBarsContainer, 6)
 		self.name:SetFontObject("CpSystemFont_NamePlate")
 	end
 	self.castBar.BorderShield:ClearAllPoints()
@@ -185,18 +176,17 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 	self.name:ClearAllPoints()
 	PixelUtil.SetPoint(self.name, "BOTTOM", self.HealthBarsContainer, "TOP", 0, 4)
 	if self.AurasFrame then
-		self.AurasFrame:SetIgnoreParentScale(true)
-		self.AurasFrame:SetSize(88, 14)
+		self.AurasFrame:SetSize(123, 20)
 		self.AurasFrame:ClearAllPoints()
 		self.AurasFrame:SetPoint("LEFT", self.HealthBarsContainer, "LEFT", -1, 0)
 		if self.HealthBarsContainer.healthBar:IsTarget() or self.name:IsShown() then
 			if ClassicPlatesDB.largerPlates then
-				self.AurasFrame:SetPoint("BOTTOM", self, "TOP", 0, 20)
+				self.AurasFrame:SetPoint("BOTTOM", self, "TOP", 0, 17)
 			else
-				self.AurasFrame:SetPoint("BOTTOM", self, "TOP")
+				self.AurasFrame:SetPoint("BOTTOM", self, "TOP", 0, -3)
 			end
 		else
-			self.AurasFrame:SetPoint("BOTTOM", self.HealthBarsContainer, "TOP", 0, 5)
+			self.AurasFrame:SetPoint("BOTTOM", self.HealthBarsContainer, "TOP", 0, 2)
 		end
 		self.AurasFrame.BuffListFrame:SetAlpha(0)
 	end
@@ -307,21 +297,22 @@ local function SkinHealthBar(frame)
 	frame.healthBar.background:SetAllPoints(frame.healthBar)
 	frame.healthBar.background:SetColorTexture(0.2, 0.2, 0.2, 0.85)
 
-	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "CpNamePlateFullBorderTemplate")
+	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "NamePlateFullBorderTemplate")
+	frame.healthBar.border:UpdateSizes()
 
 	if isTarget then
-		frame.healthBar.border:SetVertexColor(1, 1, 1, 0.55)
+		frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
 	else
-		frame.healthBar.border:SetVertexColor(0, 0, 0, 0.8)
+		frame.healthBar.border:SetVertexColor(0, 0, 0, 1)
 	end
 
 	hooksecurefunc(frame.healthBar, "UpdateSelectionBorder", function()
 		local isTarget = frame.healthBar:IsTarget()
 
 		if isTarget then
-			frame.healthBar.border:SetVertexColor(1, 1, 1, 0.55)
+			frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
 		else
-			frame.healthBar.border:SetVertexColor(0, 0, 0, 0.8)
+			frame.healthBar.border:SetVertexColor(0, 0, 0, 1)
 		end
 	end)
 end
@@ -360,8 +351,8 @@ f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 f:SetScript("OnEvent", function(self, event, unit)
 	if event == "PLAYER_LOGIN" then
-		if C_CVar.GetCVar("nameplateSelectedScale") ~= "1" then
-			C_CVar.SetCVar("nameplateSelectedScale", 1)
+		if C_CVar.GetCVar("nameplateSelectedScale") ~= "1.2" then
+			C_CVar.SetCVar("nameplateSelectedScale", 1.2)
 		end
 	elseif event == "NAME_PLATE_UNIT_ADDED" then
 		HandleNamePlateAdded(unit)
