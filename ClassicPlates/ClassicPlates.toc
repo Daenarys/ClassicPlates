@@ -1,4 +1,4 @@
-## Interface: 120007
+## Interface: 120100
 ## IconTexture: 1109508
 ## Title: Classic Plates
 ## Notes: Restores the classic Nameplates
