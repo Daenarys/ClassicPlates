@@ -122,27 +122,20 @@ hooksecurefunc(NamePlateCastingBarMixin, "ApplyStyleAndAnchoring", function(self
 	if self:IsForbidden() then return end
 
 	self:ClearAllPoints()
-	self.BorderShield:ClearAllPoints()
 	self.Icon:ClearAllPoints()
 	self.Text:ClearAllPoints()
 
 	PixelUtil.SetPoint(self, "TOPLEFT", self:GetParent(), "TOPLEFT", 0, 0)
 	PixelUtil.SetPoint(self, "BOTTOMRIGHT", self:GetParent(), "BOTTOMRIGHT", 0, 0)
-	PixelUtil.SetPoint(self.BorderShield, "CENTER", self:GetParent(), "LEFT", 0, 0)
 	PixelUtil.SetPoint(self.Icon, "CENTER", self:GetParent(), "LEFT", 0, 0)
 	PixelUtil.SetPoint(self.Text, "TOPLEFT", self, "TOPLEFT", 0, -1 * 1)
 	PixelUtil.SetPoint(self.Text, "BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, -1 * 1)
 
-	if ClassicPlatesDB.largerPlates then
-		self.BorderShield:SetSize(18, 20)
-		self.Icon:SetSize(20, 20)
-	else
-		self.BorderShield:SetSize(12, 14)
-		self.Icon:SetSize(14, 14)
-	end
+	self.Background:SetColorTexture(0.2, 0.2, 0.2, 0.5)
 
-	self.CastTargetIndicator:SetAlpha(0)
-	self.ImportantCastIndicator:SetAlpha(0)
+	self.Spark:SetSize(20, 20)
+	self.Spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
+	self.Spark:SetBlendMode("ADD")
 end)
 
 hooksecurefunc(NamePlateClassificationFrameMixin, "UpdateClassificationIndicator", function(self)
@@ -212,11 +205,64 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 	end
 end)
 
-hooksecurefunc(NamePlateUnitFrameMixin, "UpdateBehindCamera", function(self)
-	if self:IsForbidden() then return end
+local castbarColors = {}
+castbarColors.Standard = CreateColor(1.0, 0.7, 0.0, 1)
+castbarColors.Channel = CreateColor(0.0, 1.0, 0.0, 1)
+castbarColors.Uninterruptable = CreateColor(0.7, 0.7, 0.7, 1)
+castbarColors.Interrupted = CreateColor(1, 0, 0, 1)
 
-	self.behindCameraIcon:SetShown(false)
-end)
+local function SkinCastbar(frame)
+	if frame:IsForbidden() then return end
+
+	hooksecurefunc(frame, "UpdateShownState", function()
+		frame.Spark:SetSize(20, 20)
+		frame.Spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
+		frame.Spark:SetBlendMode("ADD")
+		if frame.channeling then
+			frame.Spark:Hide()
+		end
+		local FadeOutAnim = frame.FadeOutAnim:CreateAnimation("Alpha") 
+		FadeOutAnim:SetDuration(0.2)
+		FadeOutAnim:SetFromAlpha(1)
+		FadeOutAnim:SetToAlpha(0)
+	end)
+
+	hooksecurefunc(frame, "PlayInterruptAnims", function()
+		frame:GetStatusBarTexture():SetVertexColor(castbarColors.Interrupted:GetRGBA())
+		frame:SetValue(frame.maxValue)
+		frame.Spark:Hide()
+	end)
+
+	hooksecurefunc(frame, "SetIsHighlightedCastTarget", function()
+		if frame.CastTargetIndicator then
+			frame.CastTargetIndicator:Hide()
+		end
+	end)
+
+	hooksecurefunc(frame, "SetIsHighlightedImportantCast", function()
+		if frame.ImportantCastIndicator then
+			frame.ImportantCastIndicator:Hide()
+		end
+
+		if frame.ImportantCastFlashAnim then
+			frame.ImportantCastFlashAnim:SetPlaying(false)
+		end
+	end)
+
+	hooksecurefunc(frame, "UpdateBarFillTexture", function(_, isFull)
+		frame:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+		if UnitCastingInfo(frame.unit) then
+			local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo(frame.unit)
+			frame:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Standard)
+		elseif UnitChannelInfo(frame.unit) then
+			local _, _, _, _, _, _, notInterruptible = UnitChannelInfo(frame.unit)
+			frame:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Channel)
+		end
+		if isFull then
+			frame:GetStatusBarTexture():SetVertexColor(castbarColors.Channel:GetRGBA())
+		end
+	end)
+end
 
 local function SkinHealthBar(frame)
 	local isTarget = frame.healthBar:IsTarget()
@@ -261,7 +307,12 @@ local function HandleNamePlateAdded(unit)
 	local nameplate, frame = GetSafeNameplate(unit)
 	if not frame or frame.skinned then return end
 
+	SkinCastbar(frame.CastBarsContainer.castBar)
 	SkinHealthBar(frame.HealthBarsContainer)
+
+	if frame.behindCameraIcon then
+		frame.behindCameraIcon:SetAlpha(0)
+	end
 
 	frame.skinned = true
 end
