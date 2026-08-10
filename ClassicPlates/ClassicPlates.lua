@@ -133,6 +133,14 @@ hooksecurefunc(NamePlateCastingBarMixin, "ApplyStyleAndAnchoring", function(self
 
 	self.Background:SetColorTexture(0.2, 0.2, 0.2, 0.5)
 
+	if ClassicPlatesDB.largerPlates then
+		self.BorderShield:SetSize(18, 20)
+		self.Icon:SetSize(20, 20)
+	else
+		self.BorderShield:SetSize(12, 14)
+		self.Icon:SetSize(14, 14)
+	end
+
 	self.Spark:SetSize(20, 20)
 	self.Spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
 	self.Spark:SetBlendMode("ADD")
