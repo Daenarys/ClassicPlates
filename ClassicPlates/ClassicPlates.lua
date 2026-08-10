@@ -45,6 +45,18 @@ hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
 	end
 end)
 
+hooksecurefunc("CompactUnitFrame_UpdateSelectionHighlight", function(frame)
+	if not frame or frame:IsForbidden() or not frame.unit then return end
+	-- Further processing only for nameplate units
+	if not frame.unit:find("nameplate") then return end
+
+	if ( UnitIsUnit(frame.displayedUnit, "target") ) then
+		frame.selectionHighlight:Show()
+	else
+		frame.selectionHighlight:Hide()
+	end
+end)
+
 hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	if self:IsForbidden() then return end
 
