@@ -238,19 +238,10 @@ local function SkinCastbar(frame)
 		frame.Spark:SetSize(20, 20)
 		frame.Spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
 		frame.Spark:SetBlendMode("ADD")
-		if frame.channeling then
-			frame.Spark:Hide()
-		end
-		local FadeOutAnim = frame.FadeOutAnim:CreateAnimation("Alpha") 
-		FadeOutAnim:SetDuration(0.2)
-		FadeOutAnim:SetFromAlpha(1)
-		FadeOutAnim:SetToAlpha(0)
 	end)
 
 	hooksecurefunc(frame, "PlayInterruptAnims", function()
 		frame:GetStatusBarTexture():SetVertexColor(castbarColors.Interrupted:GetRGBA())
-		frame:SetValue(frame.maxValue)
-		frame.Spark:Hide()
 	end)
 
 	hooksecurefunc(frame, "SetIsHighlightedCastTarget", function()
@@ -270,7 +261,7 @@ local function SkinCastbar(frame)
 	end)
 
 	hooksecurefunc(frame, "UpdateBarFillTexture", function(_, isFull)
-		frame:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+		frame:SetStatusBarTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
 		if UnitCastingInfo(frame.unit) then
 			local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo(frame.unit)
 			frame:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Standard)
