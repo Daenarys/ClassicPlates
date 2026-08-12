@@ -153,7 +153,7 @@ hooksecurefunc(NamePlateCastingBarMixin, "ApplyStyleAndAnchoring", function(self
 		self.Icon:SetSize(14, 14)
 	end
 
-	self.Spark:SetSize(20, 20)
+	self.Spark:SetSize(22, 22)
 	self.Spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
 	self.Spark:SetBlendMode("ADD")
 end)
@@ -234,14 +234,35 @@ castbarColors.Interrupted = CreateColor(1, 0, 0, 1)
 local function SkinCastbar(frame)
 	if frame:IsForbidden() then return end
 
+	hooksecurefunc(frame, "HandleInterruptOrSpellFailed", function(_, event)
+		if frame.Text then
+			if event == "UNIT_SPELLCAST_FAILED" then
+				frame.Text:SetText(FAILED)
+			else
+				frame.Text:SetText(INTERRUPTED)
+			end
+		end
+	end)
+
 	hooksecurefunc(frame, "UpdateShownState", function()
-		frame.Spark:SetSize(20, 20)
+		frame.Spark:SetSize(22, 22)
 		frame.Spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
 		frame.Spark:SetBlendMode("ADD")
+		frame.Spark:ClearAllPoints()
+		frame.Spark:SetPoint("CENTER")
+		if frame.channeling then
+			frame.Spark:Hide()
+		end
+		local FadeOutAnim = frame.FadeOutAnim:CreateAnimation("Alpha") 
+		FadeOutAnim:SetDuration(0.2)
+		FadeOutAnim:SetFromAlpha(1)
+		FadeOutAnim:SetToAlpha(0)
 	end)
 
 	hooksecurefunc(frame, "PlayInterruptAnims", function()
 		frame:GetStatusBarTexture():SetVertexColor(castbarColors.Interrupted:GetRGBA())
+		frame:SetValue(frame.maxValue)
+		frame.Spark:Hide()
 	end)
 
 	hooksecurefunc(frame, "SetIsHighlightedCastTarget", function()
@@ -260,17 +281,17 @@ local function SkinCastbar(frame)
 		end
 	end)
 
-	hooksecurefunc(frame, "UpdateBarFillTexture", function(_, isFull)
-		frame:SetStatusBarTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
-		if UnitCastingInfo(frame.unit) then
-			local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo(frame.unit)
-			frame:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Standard)
-		elseif UnitChannelInfo(frame.unit) then
-			local _, _, _, _, _, _, notInterruptible = UnitChannelInfo(frame.unit)
-			frame:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Channel)
+	hooksecurefunc(frame, "UpdateBarFillTexture", function(self, isFull)
+		self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
+		if UnitCastingInfo(self.unit) then
+			local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo(self.unit)
+			self:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Standard)
+		elseif UnitChannelInfo(self.unit) then
+			local _, _, _, _, _, _, notInterruptible = UnitChannelInfo(self.unit)
+			self:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Channel)
 		end
 		if isFull then
-			frame:GetStatusBarTexture():SetVertexColor(castbarColors.Channel:GetRGBA())
+			self:GetStatusBarTexture():SetVertexColor(castbarColors.Channel:GetRGBA())
 		end
 	end)
 end
