@@ -351,12 +351,9 @@ local function HandleNamePlateAdded(unit)
 end
 
 local f = CreateFrame("Frame")
-f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 f:SetScript("OnEvent", function(self, event, unit)
-	if event == "PLAYER_LOGIN" then
-		C_CVar.SetCVar("nameplateSelectedScale", 1.2)
-	elseif event == "NAME_PLATE_UNIT_ADDED" then
+	if event == "NAME_PLATE_UNIT_ADDED" then
 		HandleNamePlateAdded(unit)
 	end
 end)
