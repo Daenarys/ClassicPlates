@@ -222,6 +222,16 @@ end)
 local function SkinCastbar(frame)
 	if frame:IsForbidden() then return end
 
+	hooksecurefunc(frame, "HandleInterruptOrSpellFailed", function(_, _, event)
+		if ( frame.Text ) then
+			if ( event == "UNIT_SPELLCAST_FAILED" ) then
+				frame.Text:SetText(FAILED)
+			else
+				frame.Text:SetText(INTERRUPTED)
+			end
+		end
+	end)
+
 	hooksecurefunc(frame, "SetIsHighlightedCastTarget", function()
 		if frame.CastTargetIndicator then
 			frame.CastTargetIndicator:Hide()
