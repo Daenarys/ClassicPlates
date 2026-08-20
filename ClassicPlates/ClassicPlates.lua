@@ -140,11 +140,9 @@ hooksecurefunc(NamePlateCastingBarMixin, "ApplyStyleAndAnchoring", function(self
 
 	PixelUtil.SetPoint(self, "TOPLEFT", self:GetParent(), "TOPLEFT", 0, 0)
 	PixelUtil.SetPoint(self, "BOTTOMRIGHT", self:GetParent(), "BOTTOMRIGHT", 0, 0)
-	PixelUtil.SetPoint(self.Icon, "CENTER", self:GetParent(), "LEFT", 0, 0)
-	PixelUtil.SetPoint(self.Text, "TOPLEFT", self, "TOPLEFT", 0, -1 * 1)
-	PixelUtil.SetPoint(self.Text, "BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, -1 * 1)
-
-	self.Background:SetColorTexture(0.2, 0.2, 0.2, 0.5)
+	PixelUtil.SetPoint(self.Icon, "CENTER", self, "LEFT", 0, 0)
+	PixelUtil.SetPoint(self.Text, "TOPLEFT", self, "TOPLEFT", 0, 0)
+	PixelUtil.SetPoint(self.Text, "BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
 
 	if ClassicPlatesDB.largerPlates then
 		self.BorderShield:SetSize(18, 20)
@@ -153,10 +151,6 @@ hooksecurefunc(NamePlateCastingBarMixin, "ApplyStyleAndAnchoring", function(self
 		self.BorderShield:SetSize(12, 14)
 		self.Icon:SetSize(14, 14)
 	end
-
-	self.Spark:SetSize(22, 22)
-	self.Spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
-	self.Spark:SetBlendMode("ADD")
 end)
 
 hooksecurefunc(NamePlateClassificationFrameMixin, "UpdateClassificationIndicator", function(self)
@@ -226,45 +220,8 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 	end
 end)
 
-local castbarColors = {}
-castbarColors.Standard = CreateColor(1.0, 0.7, 0.0, 1)
-castbarColors.Channel = CreateColor(0.0, 1.0, 0.0, 1)
-castbarColors.Uninterruptable = CreateColor(0.7, 0.7, 0.7, 1)
-castbarColors.Interrupted = CreateColor(1, 0, 0, 1)
-
 local function SkinCastbar(frame)
 	if frame:IsForbidden() then return end
-
-	hooksecurefunc(frame, "HandleInterruptOrSpellFailed", function(_, event)
-		if frame.Text then
-			if event == "UNIT_SPELLCAST_FAILED" then
-				frame.Text:SetText(FAILED)
-			else
-				frame.Text:SetText(INTERRUPTED)
-			end
-		end
-	end)
-
-	hooksecurefunc(frame, "UpdateShownState", function()
-		frame.Spark:SetSize(22, 22)
-		frame.Spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
-		frame.Spark:SetBlendMode("ADD")
-		frame.Spark:ClearAllPoints()
-		frame.Spark:SetPoint("CENTER")
-		if frame.channeling then
-			frame.Spark:Hide()
-		end
-		local FadeOutAnim = frame.FadeOutAnim:CreateAnimation("Alpha") 
-		FadeOutAnim:SetDuration(0.2)
-		FadeOutAnim:SetFromAlpha(1)
-		FadeOutAnim:SetToAlpha(0)
-	end)
-
-	hooksecurefunc(frame, "PlayInterruptAnims", function()
-		frame:GetStatusBarTexture():SetVertexColor(castbarColors.Interrupted:GetRGBA())
-		frame:SetValue(frame.maxValue)
-		frame.Spark:Hide()
-	end)
 
 	hooksecurefunc(frame, "SetIsHighlightedCastTarget", function()
 		if frame.CastTargetIndicator then
@@ -279,20 +236,6 @@ local function SkinCastbar(frame)
 
 		if frame.ImportantCastFlashAnim then
 			frame.ImportantCastFlashAnim:SetPlaying(false)
-		end
-	end)
-
-	hooksecurefunc(frame, "UpdateBarFillTexture", function(self, isFull)
-		self:SetStatusBarTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
-		if UnitCastingInfo(self.unit) then
-			local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo(self.unit)
-			self:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Standard)
-		elseif UnitChannelInfo(self.unit) then
-			local _, _, _, _, _, _, notInterruptible = UnitChannelInfo(self.unit)
-			self:GetStatusBarTexture():SetVertexColorFromBoolean(notInterruptible, castbarColors.Uninterruptable, castbarColors.Channel)
-		end
-		if isFull then
-			self:GetStatusBarTexture():SetVertexColor(castbarColors.Channel:GetRGBA())
 		end
 	end)
 end
