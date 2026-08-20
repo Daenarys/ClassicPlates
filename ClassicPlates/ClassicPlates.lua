@@ -72,8 +72,7 @@ hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self)
 	end
 
 	if self.Cooldown then
-		self.Cooldown:SetEdgeTexture("Interface\\Cooldown\\edge")
-		self.Cooldown:SetSwipeColor(0, 0, 0, 0.8)
+		self.Cooldown:SetSwipeColor(0, 0, 0, 0.64)
 		self.Cooldown:SetHideCountdownNumbers(true)
 	end
 
