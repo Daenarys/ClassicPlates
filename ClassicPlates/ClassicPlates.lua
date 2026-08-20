@@ -140,8 +140,8 @@ hooksecurefunc(NamePlateCastingBarMixin, "ApplyStyleAndAnchoring", function(self
 	PixelUtil.SetPoint(self, "TOPLEFT", self:GetParent(), "TOPLEFT", 0, 0)
 	PixelUtil.SetPoint(self, "BOTTOMRIGHT", self:GetParent(), "BOTTOMRIGHT", 0, 0)
 	PixelUtil.SetPoint(self.Icon, "CENTER", self, "LEFT", 0, 0)
-	PixelUtil.SetPoint(self.Text, "TOPLEFT", self, "TOPLEFT", 0, 0)
-	PixelUtil.SetPoint(self.Text, "BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
+	PixelUtil.SetPoint(self.Text, "TOPLEFT", self, "TOPLEFT", 0, -1)
+	PixelUtil.SetPoint(self.Text, "BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, -1)
 
 	if ClassicPlatesDB.largerPlates then
 		self.BorderShield:SetSize(18, 20)
