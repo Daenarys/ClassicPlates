@@ -34,14 +34,12 @@ hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
 
 	if ( CompactUnitFrame_IsTapDenied(frame) or (UnitIsDead(frame.unit) and not UnitIsPlayer(frame.unit)) ) then
 		frame.name:SetVertexColor(0.5, 0.5, 0.5)
-	elseif not ( frame.optionTable.colorNameBySelection ) then
+	else
 		if ( frame.optionTable.considerSelectionInCombatAsHostile and CompactUnitFrame_IsOnThreatListWithPlayer(frame.displayedUnit) and not UnitIsFriend("player", frame.unit)  ) then
 			frame.name:SetVertexColor(1.0, 0.0, 0.0)
 		else
 			frame.name:SetVertexColor(UnitSelectionColor(frame.unit, frame.optionTable.colorNameWithExtendedColors))
 		end
-	else
-		frame.name:SetVertexColor(1.0, 1.0, 1.0)
 	end
 end)
 
