@@ -128,7 +128,7 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 	self.name:SetIgnoreParentScale(true)
 	self.name:SetJustifyH("CENTER")
 	self.name:ClearAllPoints()
-	PixelUtil.SetPoint(self.name, "BOTTOM", self.HealthBarsContainer, "TOP", 0, 4)
+	PixelUtil.SetPoint(self.name, "BOTTOM", self.HealthBarsContainer, "TOP", 0, 5)
 end)
 
 local function SkinCastbar(frame)
