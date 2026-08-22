@@ -135,6 +135,11 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 	self.name:SetJustifyH("CENTER")
 	self.name:ClearAllPoints()
 	PixelUtil.SetPoint(self.name, "BOTTOM", self.HealthBarsContainer, "TOP", 0, 5)
+	if self.HealthBarsContainer.healthBar:IsTarget() or self.name:IsShown() then
+		PixelUtil.SetPoint(self.AurasFrame.DebuffListFrame, "BOTTOM", self.name, "TOP", 0, 0)
+	else
+		PixelUtil.SetPoint(self.AurasFrame.DebuffListFrame, "BOTTOM", self.HealthBarsContainer.healthBar, "TOP", 0, 0)
+	end
 end)
 
 local function SkinCastbar(frame)
