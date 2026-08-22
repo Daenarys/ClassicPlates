@@ -134,7 +134,7 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 	self.name:SetIgnoreParentScale(true)
 	self.name:SetJustifyH("CENTER")
 	self.name:ClearAllPoints()
-	PixelUtil.SetPoint(self.name, "BOTTOM", self.HealthBarsContainer, "TOP", 0, 5)
+	PixelUtil.SetPoint(self.name, "BOTTOM", self.HealthBarsContainer, "TOP", 0, 4)
 	if self.HealthBarsContainer.healthBar:IsTarget() or self.name:IsShown() then
 		PixelUtil.SetPoint(self.AurasFrame.DebuffListFrame, "BOTTOM", self.name, "TOP", 0, 0)
 	else
