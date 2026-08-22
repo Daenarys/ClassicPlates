@@ -135,39 +135,40 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 	self.name:SetJustifyH("CENTER")
 	self.name:ClearAllPoints()
 	PixelUtil.SetPoint(self.name, "BOTTOM", self.HealthBarsContainer, "TOP", 0, 4)
+	PixelUtil.SetPoint(self.AurasFrame.DebuffListFrame, "LEFT", self.HealthBarsContainer, "LEFT", -2, 0)
 	if self.HealthBarsContainer.healthBar:IsTarget() or self.name:IsShown() then
-		PixelUtil.SetPoint(self.AurasFrame.DebuffListFrame, "BOTTOM", self.name, "TOP", 0, 0)
+		PixelUtil.SetPoint(self.AurasFrame.DebuffListFrame, "BOTTOM", self.name, "TOP", 0, 10)
 	else
-		PixelUtil.SetPoint(self.AurasFrame.DebuffListFrame, "BOTTOM", self.HealthBarsContainer.healthBar, "TOP", 0, 0)
+		PixelUtil.SetPoint(self.AurasFrame.DebuffListFrame, "BOTTOM", self.HealthBarsContainer.healthBar, "TOP", 0, 2)
 	end
 end)
 
 local function SkinCastbar(frame)
 	if frame:IsForbidden() then return end
 
-	hooksecurefunc(frame, "HandleInterruptOrSpellFailed", function(_, _, event)
-		if ( frame.Text ) then
-			if ( event == "UNIT_SPELLCAST_FAILED" ) then
-				frame.Text:SetText(FAILED)
+	hooksecurefunc(frame, "HandleCastStop", function(self, event)
+		if self.Text then
+			if event == "UNIT_SPELLCAST_FAILED" then
+				self.Text:SetText(FAILED)
 			else
-				frame.Text:SetText(INTERRUPTED)
+				self.Text:SetText(INTERRUPTED)
 			end
 		end
 	end)
 
-	hooksecurefunc(frame, "SetIsHighlightedCastTarget", function()
-		if frame.CastTargetIndicator then
-			frame.CastTargetIndicator:Hide()
+	hooksecurefunc(frame, "SetIsHighlightedCastTarget", function(self)
+		if self.CastTargetIndicator then
+			self.CastTargetIndicator:Hide()
 		end
 	end)
 
-	hooksecurefunc(frame, "SetIsHighlightedImportantCast", function()
-		if frame.ImportantCastIndicator then
-			frame.ImportantCastIndicator:Hide()
+	hooksecurefunc(frame, "SetIsHighlightedImportantCast", function(self)
+		if self.ImportantCastIndicator then
+			self.ImportantCastIndicator:Hide()
 		end
 
-		if frame.ImportantCastFlashAnim then
-			frame.ImportantCastFlashAnim:SetPlaying(false)
+		if self.ImportantCastFlashAnim then
+			self.ImportantCastFlashAnim:SetPlaying(false)
 		end
 	end)
 end
@@ -192,13 +193,13 @@ local function SkinHealthBar(frame)
 		frame.healthBar.border:SetVertexColor(0, 0, 0, 1)
 	end
 
-	hooksecurefunc(frame.healthBar, "UpdateSelectionBorder", function()
-		local isTarget = frame.healthBar:IsTarget()
+	hooksecurefunc(frame.healthBar, "UpdateSelectionBorder", function(self)
+		local isTarget = self:IsTarget()
 
 		if isTarget then
-			frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
+			self.border:SetVertexColor(1, 1, 1, 0.9)
 		else
-			frame.healthBar.border:SetVertexColor(0, 0, 0, 1)
+			self.border:SetVertexColor(0, 0, 0, 1)
 		end
 	end)
 end
