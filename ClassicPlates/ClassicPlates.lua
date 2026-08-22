@@ -96,6 +96,12 @@ hooksecurefunc(NamePlateClassificationFrameMixin, "UpdateClassificationIndicator
 	end
 end)
 
+hooksecurefunc(NamePlateUnitFrameMixin, "UpdateBehindCamera", function(self)
+	if self:IsForbidden() then return end
+
+	self.behindCameraIcon:SetAlpha(0)
+end)
+
 hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 	if self:IsForbidden() then return end
 
@@ -206,10 +212,6 @@ local function HandleNamePlateAdded(unit)
 
 	SkinCastbar(frame.CastBarsContainer.castBar)
 	SkinHealthBar(frame.HealthBarsContainer)
-
-	if frame.behindCameraIcon then
-		frame.behindCameraIcon:SetAlpha(0)
-	end
 
 	frame.skinned = true
 end
