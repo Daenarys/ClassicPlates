@@ -228,7 +228,7 @@ end)
 local function SkinCastbar(frame)
 	if frame:IsForbidden() then return end
 
-	hooksecurefunc(frame, "HandleCastStop", function(self, event)
+	hooksecurefunc(frame, "HandleInterruptOrSpellFailed", function(self, _, event)
 		if self.Text then
 			if event == "UNIT_SPELLCAST_FAILED" then
 				self.Text:SetText(FAILED)
