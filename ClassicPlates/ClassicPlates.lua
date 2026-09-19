@@ -314,6 +314,7 @@ local function SkinHealthBar(frame)
 
 	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "NamePlateFullBorderTemplate")
 	frame.healthBar.border:UpdateSizes()
+	PixelUtil.SetRoundLayoutToNearestPixelRecursively(frame.healthBar.border, true)
 
 	if isTarget then
 		frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
