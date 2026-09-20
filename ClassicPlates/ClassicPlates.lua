@@ -136,11 +136,11 @@ hooksecurefunc(NamePlateCastingBarMixin, "ApplyStyleAndAnchoring", function(self
 	self.Icon:ClearAllPoints()
 	self.Text:ClearAllPoints()
 
-	self:SetPoint("TOPLEFT", self:GetParent(), "TOPLEFT")
-	self:SetPoint("BOTTOMRIGHT", self:GetParent(), "BOTTOMRIGHT")
-	self.Icon:SetPoint("CENTER", self, "LEFT")
-	self.Text:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -1)
-	self.Text:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, -1)
+	PixelUtil.SetPoint(self, "TOPLEFT", self:GetParent(), "TOPLEFT", 0, 0)
+	PixelUtil.SetPoint(self, "BOTTOMRIGHT", self:GetParent(), "BOTTOMRIGHT", 0, 0)
+	PixelUtil.SetPoint(self.Icon, "CENTER", self, "LEFT", 0, 0)
+	PixelUtil.SetPoint(self.Text, "TOPLEFT", self, "TOPLEFT", 0, -1)
+	PixelUtil.SetPoint(self.Text, "BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, -1)
 
 	self.Background:SetColorTexture(0.2, 0.2, 0.2, 0.5)
 
@@ -183,43 +183,41 @@ end)
 hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 	if self:IsForbidden() then return end
 
-	self.PlayerLevelDiffFrame:SetAlpha(0)
-
 	self.CastBarsContainer:ClearAllPoints()
 	self.ClassificationFrame:ClearAllPoints()
 	if ClassicPlatesDB.largerPlates then
 		self.CastBarsContainer:SetHeight(22)
-		self.CastBarsContainer:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT")
-		self.CastBarsContainer:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT")
+		PixelUtil.SetPoint(self.CastBarsContainer, "BOTTOMLEFT", self, "BOTTOMLEFT", 0, 0)
+		PixelUtil.SetPoint(self.CastBarsContainer, "BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
 		self.CastBarsContainer.castBar.Text:SetTextHeight(16)
 		self.ClassificationFrame:SetPoint("RIGHT", self.HealthBarsContainer, "LEFT", -2, 0)
-		self.HealthBarsContainer:SetHeight(12)
+		PixelUtil.SetHeight(self.HealthBarsContainer, 15)
 		self.name:SetFontObject("CpSystemFont_LargeNamePlate")
 	else
 		self.CastBarsContainer:SetHeight(12)
-		self.CastBarsContainer:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", 12, 0)
-		self.CastBarsContainer:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -12, 0)
+		PixelUtil.SetPoint(self.CastBarsContainer, "BOTTOMLEFT", self, "BOTTOMLEFT", 26, 0)
+		PixelUtil.SetPoint(self.CastBarsContainer, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -26, 0)
 		self.CastBarsContainer.castBar.Text:SetTextHeight(11)
 		self.ClassificationFrame:SetPoint("RIGHT", self.HealthBarsContainer, "LEFT")
-		self.HealthBarsContainer:SetHeight(6)
+		PixelUtil.SetHeight(self.HealthBarsContainer, 6)
 		self.name:SetFontObject("CpSystemFont_NamePlate")
 	end
 	self.ClassificationFrame:SetScale(1.4)
 	self.ClassificationFrame:SetSize(14, 13)
 	self.ClassificationFrame.classificationIndicator:SetSize(14, 13)
 	self.HealthBarsContainer:ClearAllPoints()
-	self.HealthBarsContainer:SetPoint("BOTTOMLEFT", self.CastBarsContainer, "TOPLEFT", 0, 2.5)
-	self.HealthBarsContainer:SetPoint("BOTTOMRIGHT", self.CastBarsContainer, "TOPRIGHT", 0, 2.5)
+	PixelUtil.SetPoint(self.HealthBarsContainer, "BOTTOMLEFT", self.CastBarsContainer, "TOPLEFT", 0, 2.5)
+	PixelUtil.SetPoint(self.HealthBarsContainer, "BOTTOMRIGHT", self.CastBarsContainer, "TOPRIGHT", 0, 2.5)
 	self.HealthBarsContainer.healthBar.barTexture:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
 	self.name:SetIgnoreParentScale(true)
 	self.name:SetJustifyH("CENTER")
 	self.name:ClearAllPoints()
-	self.name:SetPoint("BOTTOM", self.HealthBarsContainer, "TOP", 0, 4)
+	PixelUtil.SetPoint(self.name, "BOTTOM", self.HealthBarsContainer, "TOP", 0, 4)
 	if self.AurasFrame then
 		self.AurasFrame:SetSize(123, 20)
 		self.AurasFrame:ClearAllPoints()
 		self.AurasFrame:SetPoint("LEFT", self.HealthBarsContainer, "LEFT", -1, 0)
-		if self.IsTarget or self.name:IsShown() then
+		if self.HealthBarsContainer.healthBar:IsTarget() or self.name:IsShown() then
 			if ClassicPlatesDB.largerPlates then
 				self.AurasFrame:SetPoint("BOTTOM", self, "TOP", 0, 17)
 			else
@@ -314,7 +312,6 @@ local function SkinHealthBar(frame)
 
 	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "NamePlateFullBorderTemplate")
 	frame.healthBar.border:UpdateSizes()
-	PixelUtil.SetRoundLayoutToNearestPixelRecursively(frame.healthBar.border, true)
 
 	if isTarget then
 		frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
