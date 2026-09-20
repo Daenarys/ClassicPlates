@@ -7,4 +7,5 @@
 ## SavedVariables: ClassicPlatesDB, ClassicPlatesVersion
 config/defaults.lua
 config/options.lua
+Deprecated.lua
 ClassicPlates.xml
