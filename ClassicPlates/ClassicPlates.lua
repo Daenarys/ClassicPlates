@@ -264,6 +264,10 @@ local function HandleNamePlateAdded(unit)
 	SkinCastbar(frame.CastBarsContainer.castBar)
 	SkinHealthBar(frame.HealthBarsContainer)
 
+	if frame.ClassificationFrame then
+		frame.ClassificationFrame:Show()
+	end
+
 	if frame.PlayerLevelDiffFrame then
 		frame.PlayerLevelDiffFrame:SetAlpha(0)
 	end
