@@ -215,17 +215,6 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 	PixelUtil.SetPoint(self.name, "BOTTOM", self.HealthBarsContainer, "TOP", 0, 4)
 	if self.AurasFrame then
 		self.AurasFrame:SetSize(123, 20)
-		self.AurasFrame:ClearAllPoints()
-		self.AurasFrame:SetPoint("LEFT", self.HealthBarsContainer, "LEFT", -1, 0)
-		if self.HealthBarsContainer.healthBar:IsTarget() or self.name:IsShown() then
-			if ClassicPlatesDB.largerPlates then
-				self.AurasFrame:SetPoint("BOTTOM", self, "TOP", 0, 17)
-			else
-				self.AurasFrame:SetPoint("BOTTOM", self, "TOP", 0, -3)
-			end
-		else
-			self.AurasFrame:SetPoint("BOTTOM", self.HealthBarsContainer, "TOP", 0, 3)
-		end
 		self.AurasFrame.BuffListFrame:SetAlpha(0)
 	end
 end)
@@ -344,6 +333,22 @@ local function HandleNamePlateAdded(unit)
 
 	SkinCastbar(frame.CastBarsContainer.castBar)
 	SkinHealthBar(frame.HealthBarsContainer)
+
+	frame:HookScript("OnSizeChanged", function()
+		if frame.AurasFrame then
+			frame.AurasFrame:ClearAllPoints()
+			frame.AurasFrame:SetPoint("LEFT", frame.HealthBarsContainer, "LEFT", -1, 0)
+			if frame:IsTarget() or frame.name:IsShown() then
+				if ClassicPlatesDB.largerPlates then
+					frame.AurasFrame:SetPoint("BOTTOM", frame, "TOP", 0, 17)
+				else
+					frame.AurasFrame:SetPoint("BOTTOM", frame, "TOP", 0, -3)
+				end
+			else
+				frame.AurasFrame:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP", 0, 3)
+			end
+		end
+	end)
 
 	frame.skinned = true
 end
