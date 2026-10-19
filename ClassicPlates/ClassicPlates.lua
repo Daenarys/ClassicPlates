@@ -247,16 +247,6 @@ local function SkinCastbar(frame)
 		frame.Spark:Hide()
 	end)
 
-	hooksecurefunc(frame, "HandleInterruptOrSpellFailed", function(self, _, event)
-		if self.Text then
-			if event == "UNIT_SPELLCAST_FAILED" then
-				self.Text:SetText(FAILED)
-			else
-				self.Text:SetText(INTERRUPTED)
-			end
-		end
-	end)
-
 	hooksecurefunc(frame, "SetIsHighlightedCastTarget", function(self)
 		if self.CastTargetIndicator then
 			self.CastTargetIndicator:Hide()
@@ -284,6 +274,16 @@ local function SkinCastbar(frame)
 		end
 		if isFull then
 			self:GetStatusBarTexture():SetVertexColor(castbarColors.Channel:GetRGBA())
+		end
+	end)
+
+	frame:HookScript("OnEvent", function(self, event)
+		if self.Text then
+			if event == "UNIT_SPELLCAST_FAILED" then
+				self.Text:SetText(FAILED)
+			elseif event == "UNIT_SPELLCAST_INTERRUPTED" then
+				self.Text:SetText(INTERRUPTED)
+			end
 		end
 	end)
 end
