@@ -214,16 +214,6 @@ end)
 local function SkinCastbar(frame)
 	if frame:IsForbidden() then return end
 
-	hooksecurefunc(frame, "HandleInterruptOrSpellFailed", function(self, _, event)
-		if self.Text then
-			if event == "UNIT_SPELLCAST_FAILED" then
-				self.Text:SetText(FAILED)
-			elseif event == "UNIT_SPELLCAST_INTERRUPTED" then
-				self.Text:SetText(INTERRUPTED)
-			end
-		end
-	end)
-
 	hooksecurefunc(frame, "SetIsHighlightedCastTarget", function(self)
 		if self.CastTargetIndicator then
 			self.CastTargetIndicator:Hide()
@@ -237,16 +227,6 @@ local function SkinCastbar(frame)
 
 		if self.ImportantCastFlashAnim then
 			self.ImportantCastFlashAnim:SetPlaying(false)
-		end
-	end)
-
-	frame:HookScript("OnEvent", function(self, event)
-		if self.Text then
-			if event == "UNIT_SPELLCAST_FAILED" then
-				self.Text:SetText(FAILED)
-			elseif event == "UNIT_SPELLCAST_INTERRUPTED" then
-				self.Text:SetText(INTERRUPTED)
-			end
 		end
 	end)
 end
