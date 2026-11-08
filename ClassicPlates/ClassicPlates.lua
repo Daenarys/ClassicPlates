@@ -187,8 +187,8 @@ hooksecurefunc(NamePlateUnitFrameMixin, "UpdateAnchors", function(self)
 		self.name:SetFontObject("CpSystemFont_LargeNamePlate")
 	else
 		self.CastBarsContainer:SetHeight(12)
-		self.CastBarsContainer:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", 26, 0)
-		self.CastBarsContainer:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -26, 0)
+		self.CastBarsContainer:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", 12, 0)
+		self.CastBarsContainer:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -12, 0)
 		self.CastBarsContainer.castBar.Text:SetTextHeight(11)
 		self.ClassificationFrame:SetPoint("RIGHT", self.HealthBarsContainer, "LEFT")
 		PixelUtil.SetHeight(self.HealthBarsContainer, 6)
@@ -276,6 +276,10 @@ local function HandleNamePlateAdded(unit)
 
 	SkinCastbar(frame.CastBarsContainer.castBar)
 	SkinHealthBar(frame.HealthBarsContainer)
+
+	if frame.PlayerLevelDiffFrame then
+		frame.PlayerLevelDiffFrame:SetAlpha(0)
+	end
 
 	frame:HookScript("OnSizeChanged", function()
 		if frame.AurasFrame then
