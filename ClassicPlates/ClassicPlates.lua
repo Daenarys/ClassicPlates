@@ -289,7 +289,7 @@ local function SkinHealthBar(frame)
 	frame.healthBar.background:SetAllPoints(frame.healthBar)
 	frame.healthBar.background:SetColorTexture(0.2, 0.2, 0.2, 0.85)
 
-	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "CfNamePlateFullBorderTemplate")
+	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "CpNamePlateFullBorderTemplate")
 	frame.healthBar.border:UpdateSizes()
 
 	if isTarget then

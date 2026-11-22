@@ -1,19 +1,19 @@
-CfNamePlateBorderTemplateMixin = {};
+CpNamePlateBorderTemplateMixin = {};
 
-function CfNamePlateBorderTemplateMixin:SetVertexColor(r, g, b, a)
+function CpNamePlateBorderTemplateMixin:SetVertexColor(r, g, b, a)
 	for i, texture in ipairs(self.Textures) do
 		texture:SetVertexColor(r, g, b, a);
 	end
 end
 
-function CfNamePlateBorderTemplateMixin:SetBorderSizes(borderSize, borderSizeMinPixels, upwardExtendHeightPixels, upwardExtendHeightMinPixels)
+function CpNamePlateBorderTemplateMixin:SetBorderSizes(borderSize, borderSizeMinPixels, upwardExtendHeightPixels, upwardExtendHeightMinPixels)
 	self.borderSize = borderSize;
 	self.borderSizeMinPixels = borderSizeMinPixels;
 	self.upwardExtendHeightPixels = upwardExtendHeightPixels;
 	self.upwardExtendHeightMinPixels = upwardExtendHeightMinPixels;
 end
 
-function CfNamePlateBorderTemplateMixin:UpdateSizes()
+function CpNamePlateBorderTemplateMixin:UpdateSizes()
 	local borderSize = self.borderSize or 1;
 	local minPixels = self.borderSizeMinPixels or 2;
 
