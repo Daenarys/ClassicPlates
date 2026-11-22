@@ -289,21 +289,22 @@ local function SkinHealthBar(frame)
 	frame.healthBar.background:SetAllPoints(frame.healthBar)
 	frame.healthBar.background:SetColorTexture(0.2, 0.2, 0.2, 0.85)
 
-	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "CpNamePlateFullBorderTemplate")
+	frame.healthBar.border = CreateFrame("Frame", nil, frame.healthBar, "CfNamePlateFullBorderTemplate")
+	frame.healthBar.border:UpdateSizes()
 
 	if isTarget then
-		frame.healthBar.border:SetVertexColor(1, 1, 1, 0.55)
+		frame.healthBar.border:SetVertexColor(1, 1, 1, 0.9)
 	else
-		frame.healthBar.border:SetVertexColor(0, 0, 0, 0.8)
+		frame.healthBar.border:SetVertexColor(0, 0, 0, 1)
 	end
 
 	hooksecurefunc(frame.healthBar, "UpdateSelectionBorder", function(self)
 		local isTarget = self:IsTarget()
 
 		if isTarget then
-			self.border:SetVertexColor(1, 1, 1, 0.55)
+			self.border:SetVertexColor(1, 1, 1, 0.9)
 		else
-			self.border:SetVertexColor(0, 0, 0, 0.8)
+			self.border:SetVertexColor(0, 0, 0, 1)
 		end
 	end)
 end
